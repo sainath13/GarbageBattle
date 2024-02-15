@@ -9,92 +9,92 @@ void main() {
   );
 }
 
-const List<Item> _items = [
-  Item(
+List<Item> _items = [
+  const Item(
     name: 'Spinach Pizza',
     totalPriceCents: 1299,
     uid: '1',
     imageProvider: NetworkImage('https://flutter'
         '.dev/docs/cookbook/img-files/effects/split-check/Food1.jpg'),
   ),
-  Item(
+  const Item(
     name: 'Veggie Delight',
     totalPriceCents: 799,
     uid: '2',
     imageProvider: NetworkImage('https://flutter'
         '.dev/docs/cookbook/img-files/effects/split-check/Food2.jpg'),
   ),
-  Item(
+  const Item(
     name: 'Chicken Parmesan',
     totalPriceCents: 1499,
     uid: '3',
     imageProvider: NetworkImage('https://flutter'
         '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
   ),
-  Item(
+  const Item(
     name: 'Chicken Parmesan',
     totalPriceCents: 1499,
     uid: '4',
     imageProvider: NetworkImage('https://flutter'
         '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
   ),
-  Item(
+  const Item(
     name: 'Chicken Parmesan',
     totalPriceCents: 1499,
     uid: '5',
     imageProvider: NetworkImage('https://flutter'
         '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
   ),
-  Item(
+  const Item(
     name: 'Chicken Parmesan',
     totalPriceCents: 1499,
     uid: '6',
     imageProvider: NetworkImage('https://flutter'
         '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
   ),
-  Item(
+  const Item(
     name: 'Chicken Parmesan',
     totalPriceCents: 1499,
     uid: '7',
     imageProvider: NetworkImage('https://flutter'
         '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
   ),
-  Item(
+  const Item(
     name: 'Chicken Parmesan',
     totalPriceCents: 1499,
     uid: '8',
     imageProvider: NetworkImage('https://flutter'
         '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
   ),
-  Item(
+  const Item(
     name: 'Chicken Parmesan',
     totalPriceCents: 1499,
     uid: '9',
     imageProvider: NetworkImage('https://flutter'
         '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
   ),
-  Item(
+  const Item(
     name: 'Chicken Parmesan',
     totalPriceCents: 1499,
     uid: '10',
     imageProvider: NetworkImage('https://flutter'
         '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
   ),
-  Item(
+  const Item(
     name: 'Chicken Parmesan',
     totalPriceCents: 1499,
     uid: '11',
     imageProvider: NetworkImage('https://flutter'
         '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
   ),
-  Item(
+  const Item(
     name: 'Chicken Parmesan',
     totalPriceCents: 1499,
     uid: '12',
     imageProvider: NetworkImage('https://flutter'
         '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
   ),
-  Item(
+  const Item(
     name: 'Chicken Parmesan',
     totalPriceCents: 1499,
     uid: '13',
@@ -139,7 +139,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   }) {
     setState(() {
       customer.items.add(item);
-      // _items.removeWhere((element) => element.uid == item.uid);
+      _items.removeWhere((element) => element.uid == item.uid);
     });
   }
 
