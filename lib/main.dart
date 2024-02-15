@@ -73,6 +73,34 @@ const List<Item> _items = [
     imageProvider: NetworkImage('https://flutter'
         '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
   ),
+  Item(
+    name: 'Chicken Parmesan',
+    totalPriceCents: 1499,
+    uid: '10',
+    imageProvider: NetworkImage('https://flutter'
+        '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
+  ),
+  Item(
+    name: 'Chicken Parmesan',
+    totalPriceCents: 1499,
+    uid: '11',
+    imageProvider: NetworkImage('https://flutter'
+        '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
+  ),
+  Item(
+    name: 'Chicken Parmesan',
+    totalPriceCents: 1499,
+    uid: '12',
+    imageProvider: NetworkImage('https://flutter'
+        '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
+  ),
+  Item(
+    name: 'Chicken Parmesan',
+    totalPriceCents: 1499,
+    uid: '13',
+    imageProvider: NetworkImage('https://flutter'
+        '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
+  ),
 ];
 
 @immutable
@@ -87,17 +115,17 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     with TickerProviderStateMixin {
   final List<Customer> _people = [
     Customer(
-      name: 'Makayla',
+      name: 'Garbage bin',
       imageProvider: const NetworkImage('https://flutter'
           '.dev/docs/cookbook/img-files/effects/split-check/Avatar1.jpg'),
     ),
     Customer(
-      name: 'Nathan',
+      name: 'Recyclable bin',
       imageProvider: const NetworkImage('https://flutter'
           '.dev/docs/cookbook/img-files/effects/split-check/Avatar2.jpg'),
     ),
     Customer(
-      name: 'Emilio',
+      name: 'Electronic Waste',
       imageProvider: const NetworkImage('https://flutter'
           '.dev/docs/cookbook/img-files/effects/split-check/Avatar3.jpg'),
     ),
@@ -144,18 +172,22 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     return Row(
       children: [
         Expanded(
+          flex: 8,
           child: _buildMenuList(),
         ),
-        _buildPeopleRow(),
+        Expanded(
+          flex: 2,
+          child: _buildPeopleRow(),
+        ),
       ],
     );
   }
 
   Widget _buildMenuList() {
     return GridView.count(
-        crossAxisCount: 3,
-        crossAxisSpacing: 4.0,
-        mainAxisSpacing: 8.0,
+        crossAxisCount: 5,
+        crossAxisSpacing: 10.0,
+        mainAxisSpacing: 10.0,
         children: List.generate(_items.length, (index) {
           return Center(
             child: _buildMenuItem(item: _items[index]),
@@ -184,8 +216,8 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   Widget _buildPeopleRow() {
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 20,
+        horizontal: 5,
+        vertical: 10,
       ),
       child: Column(
         children: _people.map(_buildPersonWithDropZone).toList(),
@@ -251,8 +283,8 @@ class CustomerCart extends StatelessWidget {
             children: [
               ClipOval(
                 child: SizedBox(
-                  width: 46,
-                  height: 46,
+                  width: 100,
+                  height: 100,
                   child: Image(
                     image: customer.imageProvider,
                     fit: BoxFit.cover,
@@ -324,7 +356,7 @@ class MenuListItem extends StatelessWidget {
       borderRadius: BorderRadius.circular(20),
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Row(
+        child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
             ClipRRect(
@@ -346,24 +378,29 @@ class MenuListItem extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 30),
+            // const SizedBox(width: 30),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    name,
+                    "",
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontSize: 18,
                         ),
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    price,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
+                  const SizedBox(
+                    height: 10,
+                    width: 175,
+                  ),
+                  Center(
+                    child: Text(
+                      name,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                    ),
                   ),
                 ],
               ),
