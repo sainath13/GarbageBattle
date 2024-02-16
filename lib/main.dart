@@ -56,8 +56,7 @@ List<Item> _items = [
     name: 'Chicken Parmesan',
     totalPriceCents: 1499,
     uid: '7',
-    imageProvider: NetworkImage('https://flutter'
-        '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
+    imageProvider: AssetImage('assets/alum_can.png'),
   ),
   const Item(
     name: 'Chicken Parmesan',
