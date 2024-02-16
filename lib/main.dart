@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -9,120 +11,141 @@ void main() {
   );
 }
 
+enum GarbageType { wet, dry, sanitary, ewaste }
+
 List<Item> _items = [
   const Item(
     name: 'Aluminium can',
     totalPriceCents: 1299,
     uid: '1',
     imageProvider: AssetImage('assets/alum_can.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Band-Aids',
     totalPriceCents: 799,
     uid: '2',
     imageProvider: AssetImage('assets/band_aids.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Burger',
     totalPriceCents: 1499,
     uid: '3',
     imageProvider: AssetImage('assets/burger.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Cardboard Box',
     totalPriceCents: 1499,
     uid: '4',
     imageProvider: AssetImage('assets/cardboard_box.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Charging Cable',
     totalPriceCents: 1499,
     uid: '5',
     imageProvider: AssetImage('assets/charging_cable.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Disposable Cup',
     totalPriceCents: 1499,
     uid: '6',
     imageProvider: AssetImage('assets/disposable_cup.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Egg Shells',
     totalPriceCents: 1499,
     uid: '7',
     imageProvider: AssetImage('assets/egg_shells.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Food Leftover',
     totalPriceCents: 1499,
     uid: '8',
     imageProvider: AssetImage('assets/food_leftover.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Fruit Scraps',
     totalPriceCents: 1499,
     uid: '9',
     imageProvider: AssetImage('assets/fruit_scraps.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Game Console',
     totalPriceCents: 1499,
     uid: '10',
     imageProvider: AssetImage('assets/game_console.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Keyboard',
     totalPriceCents: 1499,
     uid: '11',
     imageProvider: AssetImage('assets/keyboard.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Mask',
     totalPriceCents: 1499,
     uid: '12',
     imageProvider: AssetImage('assets/mask.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Mouse',
     totalPriceCents: 1499,
     uid: '13',
     imageProvider: AssetImage('assets/mouse.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Newspapers',
     totalPriceCents: 1499,
     uid: '14',
     imageProvider: AssetImage('assets/newspaper.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Plastic Bottle',
     totalPriceCents: 1499,
     uid: '15',
     imageProvider: AssetImage('assets/pastic_bottle.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Broken Phone',
     totalPriceCents: 1499,
     uid: '16',
     imageProvider: AssetImage('assets/phone.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Sanitary Napkins',
     totalPriceCents: 1499,
     uid: '17',
     imageProvider: AssetImage('assets/sanitary_napkins.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Tampons',
     totalPriceCents: 1499,
     uid: '18',
     imageProvider: AssetImage('assets/tampons.png'),
+    garbageType: GarbageType.dry,
   ),
   const Item(
     name: 'Tea Bags',
     totalPriceCents: 1499,
     uid: '19',
     imageProvider: AssetImage('assets/tea_bags.png'),
+    garbageType: GarbageType.dry,
   )
 ];
 
@@ -141,16 +164,25 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       name: 'Garbage bin',
       imageProvider: const NetworkImage('https://flutter'
           '.dev/docs/cookbook/img-files/effects/split-check/Avatar1.jpg'),
+      garbageType: GarbageType.dry,
     ),
     Customer(
       name: 'Recyclable bin',
       imageProvider: const NetworkImage('https://flutter'
           '.dev/docs/cookbook/img-files/effects/split-check/Avatar2.jpg'),
+      garbageType: GarbageType.wet,
     ),
     Customer(
       name: 'Electronic Waste',
       imageProvider: const NetworkImage('https://flutter'
           '.dev/docs/cookbook/img-files/effects/split-check/Avatar3.jpg'),
+      garbageType: GarbageType.sanitary,
+    ),
+    Customer(
+      name: 'Sanitary Waste',
+      imageProvider: const NetworkImage('https://flutter'
+          '.dev/docs/cookbook/img-files/effects/split-check/Avatar3.jpg'),
+      garbageType: GarbageType.ewaste,
     ),
   ];
 
@@ -239,8 +271,8 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   Widget _buildPeopleRow() {
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: 5,
-        vertical: 10,
+        horizontal: 2.5,
+        vertical: 5,
       ),
       child: Column(
         children: _people.map(_buildPersonWithDropZone).toList(),
@@ -252,7 +284,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 6,
+          horizontal: 4,
         ),
         child: DragTarget<Item>(
           builder: (context, candidateItems, rejectedItems) {
@@ -263,10 +295,38 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
             );
           },
           onAccept: (item) {
-            _itemDroppedOnCustomerCart(
-              item: item,
-              customer: customer,
-            );
+            if (item.garbageType == customer.garbageType) {
+              _itemDroppedOnCustomerCart(
+                item: item,
+                customer: customer,
+              );
+            } else {
+              showModalBottomSheet<void>(
+                context: context,
+                builder: (BuildContext context) {
+                  return SizedBox(
+                    height: 200,
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          const Image(
+                            image: AssetImage('assets/alum_can.png'),
+                            fit: BoxFit.cover,
+                          ),
+                          const Text('Modal BottomSheet'),
+                          ElevatedButton(
+                            child: const Text('Thanks'),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            }
           },
         ),
       ),
@@ -306,8 +366,8 @@ class CustomerCart extends StatelessWidget {
             children: [
               ClipOval(
                 child: SizedBox(
-                  width: 100,
-                  height: 100,
+                  width: 75,
+                  height: 75,
                   child: Image(
                     image: customer.imageProvider,
                     fit: BoxFit.cover,
@@ -330,15 +390,15 @@ class CustomerCart extends StatelessWidget {
                 maintainSize: true,
                 child: Column(
                   children: [
-                    const SizedBox(height: 4),
-                    Text(
-                      customer.formattedTotalItemPrice,
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            color: textColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
+                    // const SizedBox(height: 4),
+                    // Text(
+                    //   customer.formattedTotalItemPrice,
+                    //   style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    //         color: textColor,
+                    //         fontSize: 16,
+                    //         fontWeight: FontWeight.bold,
+                    //       ),
+                    // ),
                     const SizedBox(height: 4),
                     Text(
                       '${customer.items.length} item${customer.items.length != 1 ? 's' : ''}',
@@ -470,16 +530,17 @@ class DraggingListItem extends StatelessWidget {
 
 @immutable
 class Item {
-  const Item({
-    required this.totalPriceCents,
-    required this.name,
-    required this.uid,
-    required this.imageProvider,
-  });
+  const Item(
+      {required this.totalPriceCents,
+      required this.name,
+      required this.uid,
+      required this.imageProvider,
+      required this.garbageType});
   final int totalPriceCents;
   final String name;
   final String uid;
   final ImageProvider imageProvider;
+  final GarbageType garbageType;
   String get formattedTotalItemPrice =>
       '\$${(totalPriceCents / 100.0).toStringAsFixed(2)}';
 }
@@ -488,12 +549,14 @@ class Customer {
   Customer({
     required this.name,
     required this.imageProvider,
+    required this.garbageType,
     List<Item>? items,
   }) : items = items ?? [];
 
   final String name;
   final ImageProvider imageProvider;
   final List<Item> items;
+  final GarbageType garbageType;
 
   String get formattedTotalItemPrice {
     final totalPriceCents =
