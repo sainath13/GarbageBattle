@@ -11,95 +11,119 @@ void main() {
 
 List<Item> _items = [
   const Item(
-    name: 'Spinach Pizza',
+    name: 'Aluminium can',
     totalPriceCents: 1299,
     uid: '1',
-    imageProvider: NetworkImage('https://flutter'
-        '.dev/docs/cookbook/img-files/effects/split-check/Food1.jpg'),
-  ),
-  const Item(
-    name: 'Veggie Delight',
-    totalPriceCents: 799,
-    uid: '2',
-    imageProvider: NetworkImage('https://flutter'
-        '.dev/docs/cookbook/img-files/effects/split-check/Food2.jpg'),
-  ),
-  const Item(
-    name: 'Chicken Parmesan',
-    totalPriceCents: 1499,
-    uid: '3',
-    imageProvider: NetworkImage('https://flutter'
-        '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
-  ),
-  const Item(
-    name: 'Chicken Parmesan',
-    totalPriceCents: 1499,
-    uid: '4',
-    imageProvider: NetworkImage('https://flutter'
-        '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
-  ),
-  const Item(
-    name: 'Chicken Parmesan',
-    totalPriceCents: 1499,
-    uid: '5',
-    imageProvider: NetworkImage('https://flutter'
-        '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
-  ),
-  const Item(
-    name: 'Chicken Parmesan',
-    totalPriceCents: 1499,
-    uid: '6',
-    imageProvider: NetworkImage('https://flutter'
-        '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
-  ),
-  const Item(
-    name: 'Chicken Parmesan',
-    totalPriceCents: 1499,
-    uid: '7',
     imageProvider: AssetImage('assets/alum_can.png'),
   ),
   const Item(
-    name: 'Chicken Parmesan',
+    name: 'Band-Aids',
+    totalPriceCents: 799,
+    uid: '2',
+    imageProvider: AssetImage('assets/band_aids.png'),
+  ),
+  const Item(
+    name: 'Burger',
+    totalPriceCents: 1499,
+    uid: '3',
+    imageProvider: AssetImage('assets/burger.png'),
+  ),
+  const Item(
+    name: 'Cardboard Box',
+    totalPriceCents: 1499,
+    uid: '4',
+    imageProvider: AssetImage('assets/cardboard_box.png'),
+  ),
+  const Item(
+    name: 'Charging Cable',
+    totalPriceCents: 1499,
+    uid: '5',
+    imageProvider: AssetImage('assets/charging_cable.png'),
+  ),
+  const Item(
+    name: 'Disposable Cup',
+    totalPriceCents: 1499,
+    uid: '6',
+    imageProvider: AssetImage('assets/disposable_cup.png'),
+  ),
+  const Item(
+    name: 'Egg Shells',
+    totalPriceCents: 1499,
+    uid: '7',
+    imageProvider: AssetImage('assets/egg_shells.png'),
+  ),
+  const Item(
+    name: 'Food Leftover',
     totalPriceCents: 1499,
     uid: '8',
-    imageProvider: NetworkImage('https://flutter'
-        '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
+    imageProvider: AssetImage('assets/food_leftover.png'),
   ),
   const Item(
-    name: 'Chicken Parmesan',
+    name: 'Fruit Scraps',
     totalPriceCents: 1499,
     uid: '9',
-    imageProvider: NetworkImage('https://flutter'
-        '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
+    imageProvider: AssetImage('assets/fruit_scraps.png'),
   ),
   const Item(
-    name: 'Chicken Parmesan',
+    name: 'Game Console',
     totalPriceCents: 1499,
     uid: '10',
-    imageProvider: NetworkImage('https://flutter'
-        '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
+    imageProvider: AssetImage('assets/game_console.png'),
   ),
   const Item(
-    name: 'Chicken Parmesan',
+    name: 'Keyboard',
     totalPriceCents: 1499,
     uid: '11',
-    imageProvider: NetworkImage('https://flutter'
-        '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
+    imageProvider: AssetImage('assets/keyboard.png'),
   ),
   const Item(
-    name: 'Chicken Parmesan',
+    name: 'Mask',
     totalPriceCents: 1499,
     uid: '12',
-    imageProvider: NetworkImage('https://flutter'
-        '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
+    imageProvider: AssetImage('assets/mask.png'),
   ),
   const Item(
-    name: 'Chicken Parmesan',
+    name: 'Mouse',
     totalPriceCents: 1499,
     uid: '13',
-    imageProvider: NetworkImage('https://flutter'
-        '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
+    imageProvider: AssetImage('assets/mouse.png'),
   ),
+  const Item(
+    name: 'Newspapers',
+    totalPriceCents: 1499,
+    uid: '14',
+    imageProvider: AssetImage('assets/newspaper.png'),
+  ),
+  const Item(
+    name: 'Plastic Bottle',
+    totalPriceCents: 1499,
+    uid: '15',
+    imageProvider: AssetImage('assets/pastic_bottle.png'),
+  ),
+  const Item(
+    name: 'Broken Phone',
+    totalPriceCents: 1499,
+    uid: '16',
+    imageProvider: AssetImage('assets/phone.png'),
+  ),
+  const Item(
+    name: 'Sanitary Napkins',
+    totalPriceCents: 1499,
+    uid: '17',
+    imageProvider: AssetImage('assets/sanitary_napkins.png'),
+  ),
+  const Item(
+    name: 'Tampons',
+    totalPriceCents: 1499,
+    uid: '18',
+    imageProvider: AssetImage('assets/tampons.png'),
+  ),
+  const Item(
+    name: 'Tea Bags',
+    totalPriceCents: 1499,
+    uid: '19',
+    imageProvider: AssetImage('assets/tea_bags.png'),
+  )
 ];
 
 @immutable

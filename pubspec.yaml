@@ -60,6 +60,24 @@ flutter:
   assets:
     - assets/image4.jpg
     - assets/alum_can.png
+    - assets/band_aids.png
+    - assets/burger.png
+    - assets/cardboard_box.png
+    - assets/charging_cable.png
+    - assets/disposable_cup.png
+    - assets/egg_shells.png
+    - assets/food_leftover.png
+    - assets/fruit_scraps.png
+    - assets/game_console.png
+    - assets/keyboard.png
+    - assets/mask.png
+    - assets/mouse.png
+    - assets/newspaper.png
+    - assets/pastic_bottle.png
+    - assets/phone.png
+    - assets/sanitary_napkins.png
+    - assets/tampons.png
+    - assets/tea_bags.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
