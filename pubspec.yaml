@@ -77,6 +77,11 @@ flutter:
     - assets/sanitary_napkins.png
     - assets/tampons.png
     - assets/tea_bags.png
+    - assets/mom_congrats.jpeg
+    - assets/collectible_card_1.png
+    - assets/collectible_card_2.png
+    - assets/collectible_card_3.png
+    - assets/collectible_card_0.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

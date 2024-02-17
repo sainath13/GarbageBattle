@@ -21,6 +21,18 @@ List<Item> _items = [
     incorrectMessageDescription:
         "Oops! Looks like this can needs a different destination. Think about where you'd recycle it.",
   ),
+];
+
+List<Item> _itemsBackup = [
+  const Item(
+    name: 'Aluminium can',
+    totalPriceCents: 1299,
+    uid: '1',
+    imageProvider: AssetImage('assets/alum_can.png'),
+    garbageType: GarbageType.dry,
+    incorrectMessageDescription:
+        "Oops! Looks like this can needs a different destination. Think about where you'd recycle it.",
+  ),
   const Item(
     name: 'Band-Aids',
     totalPriceCents: 799,
@@ -299,15 +311,75 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   }
 
   Widget _buildMenuList() {
-    return GridView.count(
+    if (_items.isEmpty) {
+      // Show congratulations screen when list becomes empty
+      return _buildCongratulationsScreen();
+    } else {
+      return GridView.count(
         crossAxisCount: 5,
         crossAxisSpacing: 25.0,
         mainAxisSpacing: 25.0,
-        children: List.generate(_items.length, (index) {
-          return Center(
-            child: _buildMenuItem(item: _items[index]),
-          );
-        }));
+        children: List.generate(
+          _items.length,
+          (index) {
+            return Center(
+              child: _buildMenuItem(item: _items[index]),
+            );
+          },
+        ),
+      );
+    }
+  }
+
+  Widget _buildCongratulationsScreen() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Left side with local image and collectible cards
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Local image on the left
+                Image.asset(
+                  'assets/mom_congrats.jpeg',
+                  width: 450,
+                  height: 450,
+                  fit: BoxFit.cover,
+                ),
+                SizedBox(width: 20),
+                // Collectible cards images on the right
+                Expanded(
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10.0,
+                    mainAxisSpacing: 10.0,
+                    shrinkWrap: true,
+                    children: List.generate(
+                      4,
+                      (index) => Image.asset(
+                        'assets/collectible_card_$index.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            // Button to add collectibles to Google Wallet
+            ElevatedButton(
+              onPressed: () {
+                // Add collectibles to Google Wallet logic here
+              },
+              child: Text('Add to Google Wallet'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildMenuItem({
