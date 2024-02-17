@@ -305,25 +305,31 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
                 context: context,
                 builder: (BuildContext context) {
                   return SizedBox(
-                    height: 200,
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          const Image(
-                            image: AssetImage('assets/alum_can.png'),
-                            fit: BoxFit.cover,
-                          ),
-                          const Text('Modal BottomSheet'),
-                          ElevatedButton(
-                            child: const Text('Thanks'),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
+                      height: 200,
+                      // child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 20,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            const Image(
+                              image: AssetImage('assets/alum_can.png'),
+                              fit: BoxFit.cover,
+                            ),
+                            const Text(
+                                'Thanks not right Emi. This item is used for something else'),
+                            ElevatedButton(
+                              child: const Text('Thanks'),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                          ],
+                        ),
+                        // ),
+                      ));
                 },
               );
             }
