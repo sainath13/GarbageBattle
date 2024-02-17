@@ -349,7 +349,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
                   height: 450,
                   fit: BoxFit.cover,
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 // Collectible cards images on the right
                 Expanded(
                   child: GridView.count(
@@ -368,13 +368,23 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
+            // Congratulations message
+            const Text(
+              'Congratulations! You have collected all the collectible cards!',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
             // Button to add collectibles to Google Wallet
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 // Add collectibles to Google Wallet logic here
               },
-              child: Text('Add to Google Wallet'),
+              child: const Text('Add to Google Wallet'),
             ),
           ],
         ),
