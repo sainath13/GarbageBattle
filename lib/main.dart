@@ -161,28 +161,52 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     with TickerProviderStateMixin {
   final List<Customer> _people = [
     Customer(
-      name: 'Garbage bin',
+      name: '    Wet waste    ',
       imageProvider: const NetworkImage('https://flutter'
           '.dev/docs/cookbook/img-files/effects/split-check/Avatar1.jpg'),
       garbageType: GarbageType.dry,
+      color: Colors.green,
+      icon: const Icon(
+        Icons.recycling_rounded,
+        color: Colors.white,
+        size: 60.0,
+      ),
     ),
     Customer(
-      name: 'Recyclable bin',
+      name: '   Dry waste     ',
       imageProvider: const NetworkImage('https://flutter'
           '.dev/docs/cookbook/img-files/effects/split-check/Avatar2.jpg'),
       garbageType: GarbageType.wet,
+      color: Colors.blue,
+      icon: const Icon(
+        Icons.recycling_sharp,
+        color: Colors.white,
+        size: 60.0,
+      ),
     ),
     Customer(
-      name: 'Electronic Waste',
+      name: 'Sanitary waste',
       imageProvider: const NetworkImage('https://flutter'
           '.dev/docs/cookbook/img-files/effects/split-check/Avatar3.jpg'),
       garbageType: GarbageType.sanitary,
+      color: Colors.red,
+      icon: const Icon(
+        Icons.recycling,
+        color: Colors.white,
+        size: 60.0,
+      ),
     ),
     Customer(
-      name: 'Sanitary Waste',
+      name: '     E waste       ',
       imageProvider: const NetworkImage('https://flutter'
           '.dev/docs/cookbook/img-files/effects/split-check/Avatar3.jpg'),
       garbageType: GarbageType.ewaste,
+      color: Colors.grey,
+      icon: const Icon(
+        Icons.recycling_outlined,
+        color: Colors.white,
+        size: 60.0,
+      ),
     ),
   ];
 
@@ -354,14 +378,16 @@ class CustomerCart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = highlighted ? Colors.white : Colors.black;
+    final textColor = highlighted ? Colors.black : Colors.white;
 
     return Transform.scale(
       scale: highlighted ? 1.075 : 1.0,
       child: Material(
         elevation: highlighted ? 8 : 4,
         borderRadius: BorderRadius.circular(22),
-        color: highlighted ? const Color(0xFFF64209) : Colors.white,
+        color: highlighted
+            ? const Color.fromARGB(184, 223, 133, 233)
+            : customer.color,
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 12,
@@ -374,10 +400,7 @@ class CustomerCart extends StatelessWidget {
                 child: SizedBox(
                   width: 75,
                   height: 75,
-                  child: Image(
-                    image: customer.imageProvider,
-                    fit: BoxFit.cover,
-                  ),
+                  child: customer.icon,
                 ),
               ),
               const SizedBox(height: 8),
@@ -556,6 +579,8 @@ class Customer {
     required this.name,
     required this.imageProvider,
     required this.garbageType,
+    required this.color,
+    required this.icon,
     List<Item>? items,
   }) : items = items ?? [];
 
@@ -563,6 +588,8 @@ class Customer {
   final ImageProvider imageProvider;
   final List<Item> items;
   final GarbageType garbageType;
+  final Color color;
+  final Icon icon;
 
   String get formattedTotalItemPrice {
     final totalPriceCents =
