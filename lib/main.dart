@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(
@@ -381,15 +382,21 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
             // Button to add collectibles to Google Wallet
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                // Add collectibles to Google Wallet logic here
-              },
+              onPressed: _launchURL,
               child: const Text('Add to Google Wallet'),
             ),
           ],
         ),
       ),
     );
+  }
+
+  _launchURL() async {
+    final Uri _url = Uri.parse(
+        'https://pay.google.com/gp/v/save/eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdHJhdy1oYXRAZGV2cG9zdGhhY2thdGhvbi5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsImF1ZCI6Imdvb2dsZSIsIm9yaWdpbnMiOltdLCJ0eXAiOiJzYXZldG93YWxsZXQiLCJwYXlsb2FkIjp7ImdlbmVyaWNPYmplY3RzIjpbeyJpZCI6IjMzODgwMDAwMDAwMjIzMjE0MjEubGF0a2Fyc2FpbmF0aF9nbWFpbC5jb20iLCJjbGFzc0lkIjoiMzM4ODAwMDAwMDAyMjMyMTQyMS5jb2RlbGFiX2NsYXNzIiwiZ2VuZXJpY1R5cGUiOiJHRU5FUklDX1RZUEVfVU5TUEVDSUZJRUQiLCJoZXhCYWNrZ3JvdW5kQ29sb3IiOiIjNDI4NWY0IiwibG9nbyI6eyJzb3VyY2VVcmkiOnsidXJpIjoiaHR0cHM6Ly9zdG9yYWdlLmdvb2dsZWFwaXMuY29tL3dhbGxldC1sYWItdG9vbHMtY29kZWxhYi1hcnRpZmFjdHMtcHVibGljL3Bhc3NfZ29vZ2xlX2xvZ28uanBnIn19LCJjYXJkVGl0bGUiOnsiZGVmYXVsdFZhbHVlIjp7Imxhbmd1YWdlIjoiZW4iLCJ2YWx1ZSI6Ikdvb2dsZSBJL08gJzIyIn19LCJzdWJoZWFkZXIiOnsiZGVmYXVsdFZhbHVlIjp7Imxhbmd1YWdlIjoiZW4iLCJ2YWx1ZSI6IkF0dGVuZGVlIn19LCJoZWFkZXIiOnsiZGVmYXVsdFZhbHVlIjp7Imxhbmd1YWdlIjoiZW4iLCJ2YWx1ZSI6IkFsZXggTWNKYWNvYnMifX0sImJhcmNvZGUiOnsidHlwZSI6IlFSX0NPREUiLCJ2YWx1ZSI6IjMzODgwMDAwMDAwMjIzMjE0MjEubGF0a2Fyc2FpbmF0aF9nbWFpbC5jb20ifSwiaGVyb0ltYWdlIjp7InNvdXJjZVVyaSI6eyJ1cmkiOiJodHRwczovL3N0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vd2FsbGV0LWxhYi10b29scy1jb2RlbGFiLWFydGlmYWN0cy1wdWJsaWMvZ29vZ2xlLWlvLWhlcm8tZGVtby1vbmx5LmpwZyJ9fSwidGV4dE1vZHVsZXNEYXRhIjpbeyJoZWFkZXIiOiJQT0lOVFMiLCJib2R5IjoiMTIzNCIsImlkIjoicG9pbnRzIn0seyJoZWFkZXIiOiJDT05UQUNUUyIsImJvZHkiOiIyMCIsImlkIjoiY29udGFjdHMifV19XX0sImlhdCI6MTcwODE4MDA3Nn0.dpGtIcYN3k4o4nnQjakFADw0zWKK6i_sUgLZ-wWwgfwrc9eNTLtklIq9oqtriRViqXBiXeadXtYoNznECFbev_bi8jfKnc918jH9qH_j3y3uNm3kXZtfjYDGe1ApvSu73HZWpWxTVybTaoVbPzzl3wMSeinOfSU5b2VDLkE49-tpj3ZEeKNPhAhIQHIjiIW2vAFcsr9XlTGNH6A6ZIeQIJrx5X4fSnOXUlKDJC-_qAIbmwoINXEOnY_5LcwEimCjafkJTaXBqqAiv3FnhZ94z5nTbfo9WDZJrQX9pvekTZ73sIvAhFH8FUat029Vc2aZC3oaxwoVMqW6Bd3-NuXNSA');
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
+    }
   }
 
   Widget _buildMenuItem({
