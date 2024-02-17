@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 void main() {
@@ -20,20 +18,26 @@ List<Item> _items = [
     uid: '1',
     imageProvider: AssetImage('assets/alum_can.png'),
     garbageType: GarbageType.dry,
+    incorrectMessageDescription:
+        "Oops! Looks like this can needs a different destination. Think about where you'd recycle it.",
   ),
   const Item(
     name: 'Band-Aids',
     totalPriceCents: 799,
     uid: '2',
     imageProvider: AssetImage('assets/band_aids.png'),
-    garbageType: GarbageType.dry,
+    garbageType: GarbageType.sanitary,
+    incorrectMessageDescription:
+        "Uh-oh! Seems like this item is more suited for a specific bin. Consider its material and its journey after disposal.",
   ),
   const Item(
     name: 'Burger',
     totalPriceCents: 1499,
     uid: '3',
     imageProvider: AssetImage('assets/burger.png'),
-    garbageType: GarbageType.dry,
+    garbageType: GarbageType.wet,
+    incorrectMessageDescription:
+        "Oops, looks like this burger's journey has been cut short! Consider where its remaining 'half' belongs",
   ),
   const Item(
     name: 'Cardboard Box',
@@ -41,13 +45,17 @@ List<Item> _items = [
     uid: '4',
     imageProvider: AssetImage('assets/cardboard_box.png'),
     garbageType: GarbageType.dry,
+    incorrectMessageDescription:
+        "Hmm, this one might need a sturdier home. Think about where you'd put it for a new life.",
   ),
   const Item(
     name: 'Charging Cable',
     totalPriceCents: 1499,
     uid: '5',
     imageProvider: AssetImage('assets/charging_cable.png'),
-    garbageType: GarbageType.dry,
+    garbageType: GarbageType.ewaste,
+    incorrectMessageDescription:
+        "Whoopsie! This item needs a charge of its own, but in a different bin. Consider its technological nature.",
   ),
   const Item(
     name: 'Disposable Cup',
@@ -55,55 +63,71 @@ List<Item> _items = [
     uid: '6',
     imageProvider: AssetImage('assets/disposable_cup.png'),
     garbageType: GarbageType.dry,
+    incorrectMessageDescription:
+        "Oh dear, this cup's journey might be a bit different than you think. Reflect on its composition.",
   ),
   const Item(
     name: 'Egg Shells',
     totalPriceCents: 1499,
     uid: '7',
     imageProvider: AssetImage('assets/egg_shells.png'),
-    garbageType: GarbageType.dry,
+    garbageType: GarbageType.wet,
+    incorrectMessageDescription:
+        "Hm, this one's a bit 'shell'-shocked! Imagine where it belongs after its 'cracking' adventure.",
   ),
   const Item(
     name: 'Food Leftover',
     totalPriceCents: 1499,
     uid: '8',
     imageProvider: AssetImage('assets/food_leftover.png'),
-    garbageType: GarbageType.dry,
+    garbageType: GarbageType.wet,
+    incorrectMessageDescription:
+        "Ah, leftovers from a journey! But perhaps a different destination awaits them. Consider their origins.",
   ),
   const Item(
     name: 'Fruit Scraps',
     totalPriceCents: 1499,
     uid: '9',
     imageProvider: AssetImage('assets/fruit_scraps.png'),
-    garbageType: GarbageType.dry,
+    garbageType: GarbageType.wet,
+    incorrectMessageDescription:
+        "Hmm, these scraps may lead to a fruitful destination elsewhere. Ponder their potential.",
   ),
   const Item(
     name: 'Game Console',
     totalPriceCents: 1499,
     uid: '10',
     imageProvider: AssetImage('assets/game_console.png'),
-    garbageType: GarbageType.dry,
+    garbageType: GarbageType.ewaste,
+    incorrectMessageDescription:
+        "Whoa, a gaming device! But its journey might be to a different bin. Imagine where it 'resets'.",
   ),
   const Item(
     name: 'Keyboard',
     totalPriceCents: 1499,
     uid: '11',
     imageProvider: AssetImage('assets/keyboard.png'),
-    garbageType: GarbageType.dry,
+    garbageType: GarbageType.ewaste,
+    incorrectMessageDescription:
+        "Oops, seems like this keyboard needs a different key to its journey. Reflect on its functionality.",
   ),
   const Item(
     name: 'Mask',
     totalPriceCents: 1499,
     uid: '12',
     imageProvider: AssetImage('assets/mask.png'),
-    garbageType: GarbageType.dry,
+    garbageType: GarbageType.sanitary,
+    incorrectMessageDescription:
+        "Ah, a mask! But perhaps a different bin awaits it for a new journey. Consider its protective purpose.",
   ),
   const Item(
     name: 'Mouse',
     totalPriceCents: 1499,
     uid: '13',
     imageProvider: AssetImage('assets/mouse.png'),
-    garbageType: GarbageType.dry,
+    garbageType: GarbageType.ewaste,
+    incorrectMessageDescription:
+        "Squeak! This mouse's journey might lead it to a different bin. Imagine where it 'clicks'.",
   ),
   const Item(
     name: 'Newspapers',
@@ -111,6 +135,8 @@ List<Item> _items = [
     uid: '14',
     imageProvider: AssetImage('assets/newspaper.png'),
     garbageType: GarbageType.dry,
+    incorrectMessageDescription:
+        "Hm, this news needs a new destination. Think about where it belongs after being 'read'.",
   ),
   const Item(
     name: 'Plastic Bottle',
@@ -118,34 +144,44 @@ List<Item> _items = [
     uid: '15',
     imageProvider: AssetImage('assets/pastic_bottle.png'),
     garbageType: GarbageType.dry,
+    incorrectMessageDescription:
+        "Oh, a bottle! But where does it go after quenching its thirst? Imagine its next adventure.",
   ),
   const Item(
     name: 'Broken Phone',
     totalPriceCents: 1499,
     uid: '16',
     imageProvider: AssetImage('assets/phone.png'),
-    garbageType: GarbageType.dry,
+    garbageType: GarbageType.ewaste,
+    incorrectMessageDescription:
+        "Uh-oh, this phone's journey might need a new 'connection'. Think about where its 'broken' parts should go for a new life",
   ),
   const Item(
     name: 'Sanitary Napkins',
     totalPriceCents: 1499,
     uid: '17',
     imageProvider: AssetImage('assets/sanitary_napkins.png'),
-    garbageType: GarbageType.dry,
+    garbageType: GarbageType.sanitary,
+    incorrectMessageDescription:
+        "Whoops, this item might need a different destination. Reflect on its hygiene purpose.",
   ),
   const Item(
     name: 'Tampons',
     totalPriceCents: 1499,
     uid: '18',
     imageProvider: AssetImage('assets/tampons.png'),
-    garbageType: GarbageType.dry,
+    garbageType: GarbageType.sanitary,
+    incorrectMessageDescription:
+        "Hmm, these might need a different bin for their next 'cycle'. Imagine where they belong.",
   ),
   const Item(
     name: 'Tea Bags',
     totalPriceCents: 1499,
     uid: '19',
     imageProvider: AssetImage('assets/tea_bags.png'),
-    garbageType: GarbageType.dry,
+    garbageType: GarbageType.wet,
+    incorrectMessageDescription:
+        "Oops, these bags might need a different brew of a bin. Ponder their compostable potential",
   )
 ];
 
@@ -164,7 +200,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       name: '    Wet waste    ',
       imageProvider: const NetworkImage('https://flutter'
           '.dev/docs/cookbook/img-files/effects/split-check/Avatar1.jpg'),
-      garbageType: GarbageType.dry,
+      garbageType: GarbageType.wet,
       color: Colors.green,
       icon: const Icon(
         Icons.recycling_rounded,
@@ -176,7 +212,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       name: '   Dry waste     ',
       imageProvider: const NetworkImage('https://flutter'
           '.dev/docs/cookbook/img-files/effects/split-check/Avatar2.jpg'),
-      garbageType: GarbageType.wet,
+      garbageType: GarbageType.dry,
       color: Colors.blue,
       icon: const Icon(
         Icons.recycling_sharp,
@@ -235,10 +271,10 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     return AppBar(
       iconTheme: const IconThemeData(color: Color(0xFFF64209)),
       title: Text(
-        'Order Food',
+        '',
         style: Theme.of(context).textTheme.headlineMedium?.copyWith(
               fontSize: 36,
-              color: const Color(0xFFF64209),
+              color: Color.fromARGB(255, 0, 0, 0),
               fontWeight: FontWeight.bold,
             ),
       ),
@@ -265,8 +301,8 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   Widget _buildMenuList() {
     return GridView.count(
         crossAxisCount: 5,
-        crossAxisSpacing: 10.0,
-        mainAxisSpacing: 10.0,
+        crossAxisSpacing: 25.0,
+        mainAxisSpacing: 25.0,
         children: List.generate(_items.length, (index) {
           return Center(
             child: _buildMenuItem(item: _items[index]),
@@ -325,7 +361,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
                 customer: customer,
               );
             } else {
-              showModalBottomSheet<void>(
+              showModalBottomSheet<Item>(
                 context: context,
                 builder: (BuildContext context) {
                   return SizedBox(
@@ -344,8 +380,9 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
                               image: AssetImage('assets/alum_can.png'),
                               fit: BoxFit.cover,
                             ),
-                            const Text(
-                                'Thanks not right Emi. This item is used for something else'),
+                            Text(
+                              item.incorrectMessageDescription,
+                            ),
                             ElevatedButton(
                               child: const Text('Thanks'),
                               onPressed: () => Navigator.pop(context),
@@ -564,12 +601,14 @@ class Item {
       required this.name,
       required this.uid,
       required this.imageProvider,
+      required this.incorrectMessageDescription,
       required this.garbageType});
   final int totalPriceCents;
   final String name;
   final String uid;
   final ImageProvider imageProvider;
   final GarbageType garbageType;
+  final String incorrectMessageDescription;
   String get formattedTotalItemPrice =>
       '\$${(totalPriceCents / 100.0).toStringAsFixed(2)}';
 }
