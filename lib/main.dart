@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 void main() {
   runApp(
@@ -21,6 +22,15 @@ List<Item> _items = [
     garbageType: GarbageType.dry,
     incorrectMessageDescription:
         "Oops! Looks like this can needs a different destination. Think about where you'd recycle it.",
+  ),
+  const Item(
+    name: 'Band-Aids',
+    totalPriceCents: 799,
+    uid: '2',
+    imageProvider: AssetImage('assets/band_aids.png'),
+    garbageType: GarbageType.sanitary,
+    incorrectMessageDescription:
+        "Uh-oh! Seems like this item is more suited for a specific bin. Consider its material and its journey after disposal.",
   ),
 ];
 
@@ -271,6 +281,16 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     });
   }
 
+  void _collectibleCollected({
+    required Item item,
+    required Customer customer,
+  }) {
+    setState(() {
+      customer.items.add(item);
+      _items.removeWhere((element) => element.uid == item.uid);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -312,9 +332,17 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   }
 
   Widget _buildMenuList() {
+    if (_people[0].items.length == 1) {
+      return _buildCongratulationsScreen(_people[0]);
+    } else if (_people[1].items.length == 1) {
+      return _buildCongratulationsScreen(_people[1]);
+    } else if (_people[2].items.length == 1) {
+      return _buildCongratulationsScreen(_people[2]);
+    } else if (_people[3].items.length == 1) {
+      return _buildCongratulationsScreen(_people[3]);
+    }
     if (_items.isEmpty) {
-      // Show congratulations screen when list becomes empty
-      return _buildCongratulationsScreen();
+      return const Text("helo");
     } else {
       return GridView.count(
         crossAxisCount: 5,
@@ -332,7 +360,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     }
   }
 
-  Widget _buildCongratulationsScreen() {
+  Widget _buildCongratulationsScreen(Customer customer) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -382,7 +410,12 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
             // Button to add collectibles to Google Wallet
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _launchURL,
+              onPressed: () {
+                print("Collectible collected");
+                setState(() {
+                  customer.items = [];
+                });
+              },
               child: const Text('Add to Google Wallet'),
             ),
           ],
@@ -714,7 +747,7 @@ class Customer {
 
   final String name;
   final ImageProvider imageProvider;
-  final List<Item> items;
+  List<Item> items;
   final GarbageType garbageType;
   final Color color;
   final Icon icon;
