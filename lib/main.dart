@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:widget_circular_animator/widget_circular_animator.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:chat_bubbles/chat_bubbles.dart';
 
 void main() {
   runApp(
@@ -10,6 +13,24 @@ void main() {
     ),
   );
 }
+
+Duration duration = new Duration();
+Duration position = new Duration();
+bool isPlaying = false;
+bool isLoading = false;
+bool isPause = false;
+
+const colorizeColors = [
+  Colors.purple,
+  Colors.blue,
+  Colors.yellow,
+  Colors.red,
+];
+
+const colorizeTextStyle = TextStyle(
+  fontSize: 50.0,
+  fontFamily: 'Horizon',
+);
 
 enum GarbageType { wet, dry, sanitary, ewaste }
 
@@ -373,6 +394,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   }
 
   Widget _buildCongratulationsScreen(Customer customer) {
+    final now = new DateTime.now();
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -383,36 +405,123 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Local image on the left
-                Image.asset(
-                  'assets/mom_congrats.jpeg',
-                  width: 450,
-                  height: 450,
-                  fit: BoxFit.cover,
-                ),
                 const SizedBox(width: 20),
-                // Collectible cards images on the right
-                Expanded(
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10.0,
-                    mainAxisSpacing: 10.0,
-                    shrinkWrap: true,
-                    children: List.generate(
-                      4,
-                      (index) => Image.asset(
-                        'assets/collectible_card_$index.png',
-                        fit: BoxFit.cover,
+                WidgetCircularAnimator(
+                  size: 350,
+                  innerIconsSize: 10,
+                  outerIconsSize: 10,
+                  innerAnimation: Curves.easeInOutBack,
+                  outerAnimation: Curves.easeInOutBack,
+                  innerColor: Colors.deepPurple,
+                  outerColor: Colors.orangeAccent,
+                  innerAnimationSeconds: 5,
+                  outerAnimationSeconds: 5,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.grey[200]),
+                    child: Image.asset(
+                      'assets/mom_congrats.png',
+                    ),
+                  ),
+                ),
+                // const SizedBox(width: 200),
+                Card(
+                  elevation: 50,
+                  shadowColor: Colors.black,
+                  color: Color.fromARGB(255, 190, 184, 59),
+                  child: SizedBox(
+                    width: 300,
+                    height: 500,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            'assets/Zephyr.png',
+                            fit: BoxFit.cover,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                            width: 250.0,
+                            child: AnimatedTextKit(
+                              animatedTexts: [
+                                ColorizeAnimatedText(
+                                  'Zephyr',
+                                  textStyle: colorizeTextStyle,
+                                  colors: colorizeColors,
+                                ),
+                              ],
+                              isRepeatingAnimation: true,
+                              onTap: () {
+                                print("Tap Event");
+                              },
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ),
                 ),
+                Card(
+                  elevation: 50,
+                  shadowColor: Colors.black,
+                  child: SizedBox(
+                    width: 300,
+                    height: 500,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            BubbleSpecialTwo(
+                              text: 'Mom, who is this stunning cheetah',
+                              isSender: true,
+                              color: Color.fromARGB(255, 110, 110, 198),
+                              tail: true,
+                              sent: true,
+                            ),
+                            BubbleSpecialOne(
+                              text:
+                                  'Honey he is Zephyr. He roams around planets and eats rabbits. You have got it as a card reward for collecting all sanitary garbage correctly.',
+                              isSender: false,
+                              color: Color(0xFF1B97F3),
+                              textStyle: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                            BubbleSpecialTwo(
+                              text:
+                                  'WOw mom thats awesome, I dont want to loose him, how do I save him',
+                              isSender: true,
+                              color: Color.fromARGB(255, 110, 110, 198),
+                              tail: true,
+                              sent: true,
+                            ),
+                            BubbleSpecialOne(
+                              text:
+                                  'Add it to your google wallet using the button below',
+                              isSender: false,
+                              color: Color(0xFF1B97F3),
+                              textStyle: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
               ],
             ),
-            const SizedBox(height: 20),
             // Congratulations message
             const Text(
-              'Congratulations! You have collected all the collectible cards!',
+              'Congratulations! You have won Zephyr the wonder card!',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
