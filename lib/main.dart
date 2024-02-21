@@ -344,17 +344,29 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     if (_items.isEmpty) {
       return const Text("helo");
     } else {
-      return GridView.count(
-        crossAxisCount: 5,
-        crossAxisSpacing: 25.0,
-        mainAxisSpacing: 25.0,
-        children: List.generate(
-          _items.length,
-          (index) {
-            return Center(
-              child: _buildMenuItem(item: _items[index]),
-            );
-          },
+      return AnimationLimiter(
+        child: GridView.count(
+          crossAxisCount: 5,
+          crossAxisSpacing: 25.0,
+          mainAxisSpacing: 25.0,
+          children: List.generate(
+            _items.length,
+            (index) {
+              return AnimationConfiguration.staggeredGrid(
+                position: index,
+                duration: const Duration(milliseconds: 375),
+                columnCount: 5,
+                child: ScaleAnimation(
+                  scale: 0.5,
+                  child: FadeInAnimation(
+                    child: Center(
+                      child: _buildMenuItem(item: _items[index]),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       );
     }
