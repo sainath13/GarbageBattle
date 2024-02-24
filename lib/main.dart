@@ -5,6 +5,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:widget_circular_animator/widget_circular_animator.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
+import 'dart:math';
 
 void main() {
   runApp(
@@ -427,45 +428,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
                   ),
                 ),
                 // const SizedBox(width: 200),
-                Card(
-                  elevation: 50,
-                  shadowColor: Colors.black,
-                  color: Color.fromARGB(255, 190, 184, 59),
-                  child: SizedBox(
-                    width: 300,
-                    height: 500,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            'assets/Zephyr.png',
-                            fit: BoxFit.cover,
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          SizedBox(
-                            width: 250.0,
-                            child: AnimatedTextKit(
-                              animatedTexts: [
-                                ColorizeAnimatedText(
-                                  'Zephyr',
-                                  textStyle: colorizeTextStyle,
-                                  colors: colorizeColors,
-                                ),
-                              ],
-                              isRepeatingAnimation: true,
-                              onTap: () {
-                                print("Tap Event");
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                CollectibleCardWidget(),
                 Card(
                   elevation: 50,
                   shadowColor: Colors.black,
@@ -717,6 +680,116 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
         ),
       ),
     );
+  }
+}
+
+class CollectibleCardWidget extends StatefulWidget {
+  const CollectibleCardWidget({
+    super.key,
+  });
+
+  @override
+  State<CollectibleCardWidget> createState() => _CollectibleCardWidgetState();
+}
+
+class _CollectibleCardWidgetState extends State<CollectibleCardWidget> {
+  double x = 0;
+  double y = 0;
+  double amplitude = 0.3;
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+        width: 350,
+        height: 500,
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Center(
+            child: Transform(
+              alignment: FractionalOffset.center,
+              transform: Matrix4.identity()
+                ..rotateX(x)
+                ..rotateY(y),
+              child: GestureDetector(
+                onPanUpdate: (details) {
+                  if (y - details.delta.dx < 0) {
+                    setState(() {
+                      y = max(y - details.delta.dx, -amplitude);
+                    });
+                  } else {
+                    setState(() {
+                      y = min(y - details.delta.dx / 100, amplitude);
+                    });
+                  }
+
+                  if (x - details.delta.dy < 0) {
+                    setState(() {
+                      x = max(x - details.delta.dy, -amplitude);
+                    });
+                  } else {
+                    setState(() {
+                      x = min(x - details.delta.dy / 100, amplitude);
+                    });
+                  }
+                },
+                child: Container(
+                    width: 350,
+                    height: 500,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/Zephyr.png'),
+                          fit: BoxFit.fill,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromARGB(170, 19, 31, 194),
+                            blurRadius: 28,
+                            offset: Offset(y * 10, -x * 80),
+                          )
+                        ])
+                    // child: Card(
+                    //   elevation: 50,
+                    //   shadowColor: Colors.black,
+                    //   color: Color.fromARGB(255, 190, 184, 59),
+                    //   child: SizedBox(
+                    //     width: 300,
+                    //     height: 500,
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.all(20.0),
+                    //       child: Column(
+                    //         children: [
+                    //           Image.asset(
+                    //             'assets/Zephyr.png',
+                    //             fit: BoxFit.cover,
+                    //           ),
+                    //           const SizedBox(
+                    //             height: 10,
+                    //           ),
+                    //           SizedBox(
+                    //             width: 250.0,
+                    //             child: AnimatedTextKit(
+                    //               animatedTexts: [
+                    //                 ColorizeAnimatedText(
+                    //                   'Zephyr',
+                    //                   textStyle: colorizeTextStyle,
+                    //                   colors: colorizeColors,
+                    //                 ),
+                    //               ],
+                    //               isRepeatingAnimation: true,
+                    //               onTap: () {
+                    //                 print("Tap Event");
+                    //               },
+                    //             ),
+                    //           )
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    ),
+              ),
+            ),
+          ),
+        ));
   }
 }
 
