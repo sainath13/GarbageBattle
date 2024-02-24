@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:garbage_sorting/app_barcode_scanner_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:widget_circular_animator/widget_circular_animator.dart';
@@ -393,6 +394,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     }
   }
 
+  var _code = "hello";
   Widget _buildCongratulationsScreen(Customer customer) {
     final now = new DateTime.now();
     return Center(
@@ -536,12 +538,86 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
                 setState(() {
                   customer.items = [];
                 });
+                Navigator.of(context).restorablePush(_dialogBuilder);
               },
               child: const Text('Add to Google Wallet'),
             ),
+            // Column(
+            //   children: [
+            //     Expanded(
+            //       flex: 4,
+            //       child: AppBarcodeScannerWidget.defaultStyle(
+            //         resultCallback: (String code) {
+            //           setState(() {
+            //             _code = code;
+            //           });
+            //         },
+            //         openManual: true,
+            //       ),
+            //     ),
+            //     Expanded(
+            //       flex: 1,
+            //       child: Container(),
+            //     ),
+            //   ],
+            // )
           ],
         ),
       ),
+    );
+  }
+
+  Route<Object?> _dialogBuilder(BuildContext context, Object? arguments) {
+    return DialogRoute<void>(
+      context: context,
+      builder: (BuildContext context) {
+        // return Column(
+        //   children: [
+        //     Expanded(
+        //       flex: 4,
+        //       child: AppBarcodeScannerWidget.defaultStyle(
+        //         resultCallback: (String code) {
+        //           print("Scanned text is " + code);
+        //           setState(() {
+        //             _code = code;
+        //           });
+        //         },
+        //         openManual: true,
+        //       ),
+        //     ),
+        //     Expanded(
+        //       flex: 1,
+        //       child: Container(),
+        //     ),
+        //   ],
+        // );
+        return AlertDialog(
+          title: const Text('AlertDialog Title'),
+          content: SingleChildScrollView(
+            child: SizedBox(
+              height: 200,
+              width: 200,
+              child: AppBarcodeScannerWidget.defaultStyle(
+                resultCallback: (String code) {
+                  print("Scanned text is " + code);
+                  setState(() {
+                    _code = code;
+                  });
+                },
+                openManual: true,
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Approve'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
