@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:widget_circular_animator/widget_circular_animator.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
+import 'package:confetti/confetti.dart';
 
 void main() {
   runApp(
@@ -51,12 +53,31 @@ class ExampleDragAndDrop extends StatefulWidget {
 
 class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     with TickerProviderStateMixin {
+  late ConfettiController _topController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // initialize confettiController
+    _topController = ConfettiController(duration: const Duration(seconds: 10));
+  }
+
+  @override
+  void dispose() {
+    // dispose the controller
+    _topController.dispose();
+    super.dispose();
+  }
+
   final List<Dustbin> _dustbins = [
     Dustbin(
       name: '    Wet waste    ',
       garbageType: GarbageType.wet,
       color: Colors.green,
       collectibleReward: CollectibleReward.kumo,
+      maxLength: 1, //TODO SAI change this lengths to actual counts
+      mistakes: 0,
       icon: const Icon(
         Icons.recycling_rounded,
         color: Colors.white,
@@ -67,6 +88,8 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       name: '   Dry waste     ',
       garbageType: GarbageType.dry,
       color: Colors.blue,
+      maxLength: 1,
+      mistakes: 0,
       collectibleReward: CollectibleReward.zephyr,
       icon: const Icon(
         Icons.recycling_sharp,
@@ -78,6 +101,8 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       name: 'Sanitary waste',
       garbageType: GarbageType.sanitary,
       color: Colors.red,
+      maxLength: 1,
+      mistakes: 0,
       collectibleReward: CollectibleReward.fenrir,
       icon: const Icon(
         Icons.recycling,
@@ -89,6 +114,8 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       name: '     E waste       ',
       garbageType: GarbageType.ewaste,
       color: Colors.grey,
+      maxLength: 1,
+      mistakes: 0,
       collectibleReward: CollectibleReward.ursula,
       icon: const Icon(
         Icons.recycling_outlined,
@@ -110,12 +137,19 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     });
   }
 
+  void _itemDroppedOnIncorrectDustbin({required Dustbin dustbin}) {
+    print("Made a mistake");
+    setState(() {
+      dustbin.mistakes++;
+    });
+  }
+
   void _collectibleCollected({
     required Item item,
-    required Dustbin customer,
+    required Dustbin dustbin,
   }) {
     setState(() {
-      customer.items.add(item);
+      dustbin.items.add(item);
       _items.removeWhere((element) => element.uid == item.uid);
     });
   }
@@ -146,29 +180,48 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   }
 
   Widget _buildContent() {
-    return Row(
-      children: [
-        Expanded(
-          flex: 8,
-          child: _buildGarbageList(),
+    return Stack(
+      children: <Widget>[
+        Row(
+          children: [
+            Expanded(
+              flex: 8,
+              child: _buildGarbageList(),
+            ),
+            Expanded(
+              flex: 2,
+              child: _buildDustbinRow(),
+            ),
+          ],
         ),
-        Expanded(
-          flex: 2,
-          child: _buildDustbinRow(),
+        Align(
+          alignment: Alignment.topCenter,
+          child: ConfettiWidget(
+            confettiController: _topController,
+            blastDirection: pi / 2,
+            maxBlastForce: 5,
+            minBlastForce: 1,
+            emissionFrequency: 0.03,
+
+            // 10 paticles will pop-up at a time
+            numberOfParticles: 10,
+
+            // particles will pop-up
+            gravity: 0,
+          ),
         ),
       ],
     );
   }
 
   Widget _buildGarbageList() {
-    //TODO change these lengths to actual counts
-    if (_dustbins[0].items.length == 1) {
+    if (_dustbins[0].items.length == _dustbins[0].maxLength) {
       return _buildCongratulationsScreen(_dustbins[0]);
-    } else if (_dustbins[1].items.length == 1) {
+    } else if (_dustbins[1].items.length == _dustbins[1].maxLength) {
       return _buildCongratulationsScreen(_dustbins[1]);
-    } else if (_dustbins[2].items.length == 1) {
+    } else if (_dustbins[2].items.length == _dustbins[2].maxLength) {
       return _buildCongratulationsScreen(_dustbins[2]);
-    } else if (_dustbins[3].items.length == 1) {
+    } else if (_dustbins[3].items.length == _dustbins[3].maxLength) {
       return _buildCongratulationsScreen(_dustbins[3]);
     }
     if (_items.isEmpty) {
@@ -203,6 +256,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   }
 
   Widget _buildCongratulationsScreen(Dustbin dustbin) {
+    _topController.play();
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -308,18 +362,22 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   }
 
   Widget _buildDustbinRow() {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 2.5,
-        vertical: 5,
-      ),
-      child: Column(
-        children: _dustbins.map(_buildPersonWithDropZone).toList(),
-      ),
+    return Stack(
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 2.5,
+            vertical: 5,
+          ),
+          child: Column(
+            children: _dustbins.map(_buildDustbinWithDropZone).toList(),
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _buildPersonWithDropZone(Dustbin customer) {
+  Widget _buildDustbinWithDropZone(Dustbin dustbin) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -327,19 +385,20 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
         ),
         child: DragTarget<Item>(
           builder: (context, candidateItems, rejectedItems) {
-            return CustomerCart(
-              hasItems: customer.items.isNotEmpty,
+            return DustbinCart(
+              hasItems: dustbin.items.isNotEmpty,
               highlighted: candidateItems.isNotEmpty,
-              customer: customer,
+              dustbin: dustbin,
             );
           },
           onAccept: (item) {
-            if (item.garbageType == customer.garbageType) {
+            if (item.garbageType == dustbin.garbageType) {
               _itemDroppedOnDustbin(
                 item: item,
-                dustbin: customer,
+                dustbin: dustbin,
               );
             } else {
+              _itemDroppedOnIncorrectDustbin(dustbin: dustbin);
               showModalBottomSheet<Item>(
                 context: context,
                 builder: (BuildContext context) {
@@ -752,15 +811,15 @@ class _CollectibleCardWidgetState extends State<CollectibleCardWidget>
       AssetImage('assets/$collectibleReward.png');
 }
 
-class CustomerCart extends StatelessWidget {
-  const CustomerCart({
+class DustbinCart extends StatelessWidget {
+  const DustbinCart({
     super.key,
-    required this.customer,
+    required this.dustbin,
     this.highlighted = false,
     this.hasItems = false,
   });
 
-  final Dustbin customer;
+  final Dustbin dustbin;
   final bool highlighted;
   final bool hasItems;
 
@@ -775,7 +834,7 @@ class CustomerCart extends StatelessWidget {
         borderRadius: BorderRadius.circular(22),
         color: highlighted
             ? const Color.fromARGB(184, 223, 133, 233)
-            : customer.color,
+            : dustbin.color,
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 12,
@@ -788,12 +847,12 @@ class CustomerCart extends StatelessWidget {
                 child: SizedBox(
                   width: 75,
                   height: 75,
-                  child: customer.icon,
+                  child: dustbin.icon,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                customer.name,
+                dustbin.name,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: textColor,
                       fontWeight:
@@ -807,18 +866,9 @@ class CustomerCart extends StatelessWidget {
                 maintainSize: true,
                 child: Column(
                   children: [
-                    // const SizedBox(height: 4),
-                    // Text(
-                    //   customer.formattedTotalItemPrice,
-                    //   style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    //         color: textColor,
-                    //         fontSize: 16,
-                    //         fontWeight: FontWeight.bold,
-                    //       ),
-                    // ),
                     const SizedBox(height: 4),
                     Text(
-                      '${customer.items.length} item${customer.items.length != 1 ? 's' : ''}',
+                      '${dustbin.items.length} item${dustbin.items.length != 1 ? 's' : ''}',
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             color: textColor,
                             fontSize: 12,
@@ -971,6 +1021,8 @@ class Dustbin {
     required this.color,
     required this.icon,
     required this.collectibleReward,
+    required this.maxLength,
+    required this.mistakes,
     List<Item>? items,
   }) : items = items ?? [];
 
@@ -980,7 +1032,8 @@ class Dustbin {
   final Color color;
   final Icon icon;
   final CollectibleReward collectibleReward;
-
+  final int maxLength;
+  int mistakes;
   String get formattedTotalItemPrice {
     final totalPriceCents =
         items.fold<int>(0, (prev, item) => prev + item.totalPriceCents);
