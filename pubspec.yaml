@@ -91,12 +91,14 @@ flutter:
     - assets/tea_bags.png
     - assets/mom_congrats.jpeg
     - assets/mom_congrats.png
-    - assets/Zephyr.png
     - assets/collectible_card_1.png
     - assets/collectible_card_2.png
     - assets/collectible_card_3.png
     - assets/collectible_card_0.png
-
+    - assets/CollectibleReward.zephyr.png
+    - assets/CollectibleReward.kumo.png
+    - assets/CollectibleReward.fenrir.png
+    - assets/CollectibleReward.ursula.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

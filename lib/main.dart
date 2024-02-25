@@ -16,7 +16,9 @@ void main() {
   );
 }
 
-enum GarbageType { wet, dry, sanitary, ewaste }
+enum GarbageType { dry, wet, sanitary, ewaste }
+
+enum CollectibleReward { zephyr, kumo, fenrir, ursula }
 
 List<Item> _items = [
   const Item(
@@ -49,11 +51,12 @@ class ExampleDragAndDrop extends StatefulWidget {
 
 class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     with TickerProviderStateMixin {
-  final List<Dustbin> _people = [
+  final List<Dustbin> _dustbins = [
     Dustbin(
       name: '    Wet waste    ',
       garbageType: GarbageType.wet,
       color: Colors.green,
+      collectibleReward: CollectibleReward.kumo,
       icon: const Icon(
         Icons.recycling_rounded,
         color: Colors.white,
@@ -64,6 +67,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       name: '   Dry waste     ',
       garbageType: GarbageType.dry,
       color: Colors.blue,
+      collectibleReward: CollectibleReward.zephyr,
       icon: const Icon(
         Icons.recycling_sharp,
         color: Colors.white,
@@ -74,6 +78,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       name: 'Sanitary waste',
       garbageType: GarbageType.sanitary,
       color: Colors.red,
+      collectibleReward: CollectibleReward.fenrir,
       icon: const Icon(
         Icons.recycling,
         color: Colors.white,
@@ -84,6 +89,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       name: '     E waste       ',
       garbageType: GarbageType.ewaste,
       color: Colors.grey,
+      collectibleReward: CollectibleReward.ursula,
       icon: const Icon(
         Icons.recycling_outlined,
         color: Colors.white,
@@ -155,14 +161,15 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   }
 
   Widget _buildGarbageList() {
-    if (_people[0].items.length == 1) {
-      return _buildCongratulationsScreen(_people[0]);
-    } else if (_people[1].items.length == 1) {
-      return _buildCongratulationsScreen(_people[1]);
-    } else if (_people[2].items.length == 1) {
-      return _buildCongratulationsScreen(_people[2]);
-    } else if (_people[3].items.length == 1) {
-      return _buildCongratulationsScreen(_people[3]);
+    //TODO change these lengths to actual counts
+    if (_dustbins[0].items.length == 1) {
+      return _buildCongratulationsScreen(_dustbins[0]);
+    } else if (_dustbins[1].items.length == 1) {
+      return _buildCongratulationsScreen(_dustbins[1]);
+    } else if (_dustbins[2].items.length == 1) {
+      return _buildCongratulationsScreen(_dustbins[2]);
+    } else if (_dustbins[3].items.length == 1) {
+      return _buildCongratulationsScreen(_dustbins[3]);
     }
     if (_items.isEmpty) {
       return const Text("helo");
@@ -195,7 +202,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     }
   }
 
-  Widget _buildCongratulationsScreen(Dustbin customer) {
+  Widget _buildCongratulationsScreen(Dustbin dustbin) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -207,26 +214,10 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(width: 20),
-                WidgetCircularAnimator(
-                  size: 350,
-                  innerIconsSize: 10,
-                  outerIconsSize: 10,
-                  innerAnimation: Curves.easeInOutBack,
-                  outerAnimation: Curves.easeInOutBack,
-                  innerColor: Colors.deepPurple,
-                  outerColor: Colors.orangeAccent,
-                  innerAnimationSeconds: 5,
-                  outerAnimationSeconds: 5,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.grey[200]),
-                    child: Image.asset(
-                      'assets/mom_congrats.png',
-                    ),
-                  ),
-                ),
+                const AnimatedMomSayingCongratsWidget(),
                 // const SizedBox(width: 200),
-                CollectibleCardWidget(),
+                CollectibleCardWidget(
+                    collectibleReward: dustbin.collectibleReward),
                 ChatWidget(),
                 const SizedBox(height: 20),
               ],
@@ -246,7 +237,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
               onPressed: () {
                 print("Collectible collected");
                 setState(() {
-                  customer.items = [];
+                  dustbin.items = [];
                 });
                 Navigator.of(context).restorablePush(_dialogBuilder);
               },
@@ -323,7 +314,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
         vertical: 5,
       ),
       child: Column(
-        children: _people.map(_buildPersonWithDropZone).toList(),
+        children: _dustbins.map(_buildPersonWithDropZone).toList(),
       ),
     );
   }
@@ -383,6 +374,34 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
               );
             }
           },
+        ),
+      ),
+    );
+  }
+}
+
+class AnimatedMomSayingCongratsWidget extends StatelessWidget {
+  const AnimatedMomSayingCongratsWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return WidgetCircularAnimator(
+      size: 350,
+      innerIconsSize: 10,
+      outerIconsSize: 10,
+      innerAnimation: Curves.easeInOutBack,
+      outerAnimation: Curves.easeInOutBack,
+      innerColor: Colors.deepPurple,
+      outerColor: Colors.orangeAccent,
+      innerAnimationSeconds: 5,
+      outerAnimationSeconds: 5,
+      child: Container(
+        decoration:
+            BoxDecoration(shape: BoxShape.circle, color: Colors.grey[200]),
+        child: Image.asset(
+          'assets/mom_congrats.png',
         ),
       ),
     );
@@ -653,9 +672,10 @@ enum AnimationDirection {
 }
 
 class CollectibleCardWidget extends StatefulWidget {
-  const CollectibleCardWidget({
-    super.key,
-  });
+  final CollectibleReward collectibleReward;
+
+  CollectibleCardWidget({Key? key, required this.collectibleReward})
+      : super(key: key);
 
   @override
   State<CollectibleCardWidget> createState() => _CollectibleCardWidgetState();
@@ -664,6 +684,7 @@ class CollectibleCardWidget extends StatefulWidget {
 class _CollectibleCardWidgetState extends State<CollectibleCardWidget>
     with TickerProviderStateMixin {
   late AnimationController _controller1;
+  @override
   void initState() {
     super.initState();
     _controller1 = AnimationController(
@@ -709,55 +730,16 @@ class _CollectibleCardWidgetState extends State<CollectibleCardWidget>
                   height: 500,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('assets/Zephyr.png'),
+                        image:
+                            getCardImageFromCardType(widget.collectibleReward),
                         fit: BoxFit.fill,
                       ),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Color.fromARGB(170, 19, 31, 194),
                           blurRadius: 28,
                         )
-                      ])
-                  // child: Card(
-                  //   elevation: 50,
-                  //   shadowColor: Colors.black,
-                  //   color: Color.fromARGB(255, 190, 184, 59),
-                  //   child: SizedBox(
-                  //     width: 300,
-                  //     height: 500,
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.all(20.0),
-                  //       child: Column(
-                  //         children: [
-                  //           Image.asset(
-                  //             'assets/Zephyr.png',
-                  //             fit: BoxFit.cover,
-                  //           ),
-                  //           const SizedBox(
-                  //             height: 10,
-                  //           ),
-                  //           SizedBox(
-                  //             width: 250.0,
-                  //             child: AnimatedTextKit(
-                  //               animatedTexts: [
-                  //                 ColorizeAnimatedText(
-                  //                   'Zephyr',
-                  //                   textStyle: colorizeTextStyle,
-                  //                   colors: colorizeColors,
-                  //                 ),
-                  //               ],
-                  //               isRepeatingAnimation: true,
-                  //               onTap: () {
-                  //                 print("Tap Event");
-                  //               },
-                  //             ),
-                  //           )
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  ),
+                      ])),
             ),
           ),
           // ),
@@ -765,6 +747,9 @@ class _CollectibleCardWidgetState extends State<CollectibleCardWidget>
       ),
     );
   }
+
+  AssetImage getCardImageFromCardType(collectibleReward) =>
+      AssetImage('assets/$collectibleReward.png');
 }
 
 class CustomerCart extends StatelessWidget {
@@ -985,6 +970,7 @@ class Dustbin {
     required this.garbageType,
     required this.color,
     required this.icon,
+    required this.collectibleReward,
     List<Item>? items,
   }) : items = items ?? [];
 
@@ -993,6 +979,7 @@ class Dustbin {
   final GarbageType garbageType;
   final Color color;
   final Icon icon;
+  final CollectibleReward collectibleReward;
 
   String get formattedTotalItemPrice {
     final totalPriceCents =
