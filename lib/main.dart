@@ -85,6 +85,10 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
           'https://res.cloudinary.com/parc-india/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1708706668/84823BA6-0E4A-4BFC-B591-2281FB6AF9FA_hb33up.jpg',
       cardImage:
           'https://res.cloudinary.com/parc-india/image/upload/f_auto,q_auto/x0ghmv4ym4ucg3lklsya',
+      cardHeader: 'Kumo',
+      cardSubHeader: 'The Roaming Companion',
+      cardBody:
+          'Kumo, known as the Roaming Companion, trots through the winding streets of the city, his loyal presence a comforting beacon for those in need. With each step, he brings joy and warmth to the hearts of all he encounters, his wagging tail a symbol of unwavering friendship and companionship.',
       icon: const Icon(
         Icons.recycling_rounded,
         color: Colors.white,
@@ -103,6 +107,10 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
           'https://res.cloudinary.com/parc-india/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1708706668/84823BA6-0E4A-4BFC-B591-2281FB6AF9FA_hb33up.jpg',
       cardImage:
           'https://res.cloudinary.com/parc-india/image/upload/f_auto,q_auto/x0ghmv4ym4ucg3lklsya',
+      cardHeader: 'Zephyr',
+      cardSubHeader: 'The Wanderer',
+      cardBody:
+          'Zephyr, the Wanderer, roams majestic landscapes, his enigmatic presence a beacon amidst the horizon. His footsteps weave tales of mystery and wonder through the sprawling wilderness.',
       icon: const Icon(
         Icons.recycling_sharp,
         color: Colors.white,
@@ -121,6 +129,10 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
           'https://res.cloudinary.com/parc-india/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1708706668/84823BA6-0E4A-4BFC-B591-2281FB6AF9FA_hb33up.jpg',
       cardImage:
           'https://res.cloudinary.com/parc-india/image/upload/f_auto,q_auto/x0ghmv4ym4ucg3lklsya',
+      cardHeader: 'Fenrir',
+      cardSubHeader: 'The Silent Stalker',
+      cardBody:
+          'Fenrir, known as the Silent Stalker, prowls through the moonlit night with unmatched grace and stealth. His piercing gaze cuts through the darkness, his primal instincts guiding him through the untamed wilderness. As he hunts beneath the cloak of night, his howl echoes through the silent woods, a haunting melody that strikes fear into the hearts of prey.',
       icon: const Icon(
         Icons.recycling,
         color: Colors.white,
@@ -139,6 +151,10 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
           'https://res.cloudinary.com/parc-india/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1708706668/84823BA6-0E4A-4BFC-B591-2281FB6AF9FA_hb33up.jpg',
       cardImage:
           'https://res.cloudinary.com/parc-india/image/upload/f_auto,q_auto/x0ghmv4ym4ucg3lklsya',
+      cardHeader: 'Ursula',
+      cardSubHeader: 'The Solitary Sentinel',
+      cardBody:
+          'Ursula, known as the Solitary Sentinel, stands tall amidst the dense forest, her formidable presence a testament to the strength and resilience of nature. With a watchful eye and a gentle spirit, she guards the secrets of the wilderness, her majestic form a source of awe and admiration for all who behold her.',
       icon: const Icon(
         Icons.recycling_outlined,
         color: Colors.white,
@@ -382,10 +398,13 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
                 'defaultValue': {'language': 'en', 'value': 'Strawhat labs'}
               },
               'subheader': {
-                'defaultValue': {'language': 'en', 'value': 'The wanderer'}
+                'defaultValue': {
+                  'language': 'en',
+                  'value': dustbin.cardSubHeader
+                }
               },
               'header': {
-                'defaultValue': {'language': 'en', 'value': 'FERNINR'}
+                'defaultValue': {'language': 'en', 'value': dustbin.cardHeader}
               },
               "textModulesData": [
                 {
@@ -401,9 +420,8 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
                 },
                 {
                   "id": "cardinfo",
-                  "header": "Name of the card",
-                  "body":
-                      "Total description and story of the card, this is really good and should be printed on multiple lines my friend. heelo good morning",
+                  "header": '${dustbin.cardHeader} ${dustbin.cardSubHeader}',
+                  "body": dustbin.cardBody,
                 }
               ],
               'heroImage': {
@@ -1168,6 +1186,9 @@ class Dustbin {
     required this.collectibleType,
     required this.heroImage,
     required this.cardImage,
+    required this.cardHeader,
+    required this.cardSubHeader,
+    required this.cardBody,
     List<Item>? items,
   }) : items = items ?? [];
 
@@ -1181,6 +1202,9 @@ class Dustbin {
   final String collectibleType;
   final String heroImage;
   final String cardImage;
+  final String cardHeader;
+  final String cardSubHeader;
+  final String cardBody;
   int mistakes;
   String get formattedTotalItemPrice {
     final totalPriceCents =
