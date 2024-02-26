@@ -81,6 +81,10 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       maxLength: 1, //TODO SAI change this lengths to actual counts
       mistakes: 0,
       collectibleType: 'Dog',
+      heroImage:
+          'https://res.cloudinary.com/parc-india/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1708706668/84823BA6-0E4A-4BFC-B591-2281FB6AF9FA_hb33up.jpg',
+      cardImage:
+          'https://res.cloudinary.com/parc-india/image/upload/f_auto,q_auto/x0ghmv4ym4ucg3lklsya',
       icon: const Icon(
         Icons.recycling_rounded,
         color: Colors.white,
@@ -95,6 +99,10 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       mistakes: 0,
       collectibleReward: CollectibleReward.zephyr,
       collectibleType: 'Cheetah',
+      heroImage:
+          'https://res.cloudinary.com/parc-india/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1708706668/84823BA6-0E4A-4BFC-B591-2281FB6AF9FA_hb33up.jpg',
+      cardImage:
+          'https://res.cloudinary.com/parc-india/image/upload/f_auto,q_auto/x0ghmv4ym4ucg3lklsya',
       icon: const Icon(
         Icons.recycling_sharp,
         color: Colors.white,
@@ -109,6 +117,10 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       mistakes: 0,
       collectibleReward: CollectibleReward.fenrir,
       collectibleType: 'Wolf',
+      heroImage:
+          'https://res.cloudinary.com/parc-india/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1708706668/84823BA6-0E4A-4BFC-B591-2281FB6AF9FA_hb33up.jpg',
+      cardImage:
+          'https://res.cloudinary.com/parc-india/image/upload/f_auto,q_auto/x0ghmv4ym4ucg3lklsya',
       icon: const Icon(
         Icons.recycling,
         color: Colors.white,
@@ -123,6 +135,10 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       mistakes: 0,
       collectibleReward: CollectibleReward.ursula,
       collectibleType: 'Bear',
+      heroImage:
+          'https://res.cloudinary.com/parc-india/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1708706668/84823BA6-0E4A-4BFC-B591-2281FB6AF9FA_hb33up.jpg',
+      cardImage:
+          'https://res.cloudinary.com/parc-india/image/upload/f_auto,q_auto/x0ghmv4ym4ucg3lklsya',
       icon: const Icon(
         Icons.recycling_outlined,
         color: Colors.white,
@@ -381,7 +397,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
                 {
                   "id": "type",
                   "header": "type",
-                  "body": "${dustbin.collectibleType}",
+                  "body": dustbin.collectibleType,
                 },
                 {
                   "id": "cardinfo",
@@ -392,8 +408,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
               ],
               'heroImage': {
                 'sourceUri': {
-                  'uri':
-                      'https://res.cloudinary.com/parc-india/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1708706668/84823BA6-0E4A-4BFC-B591-2281FB6AF9FA_hb33up.jpg'
+                  'uri': dustbin.heroImage,
                 }
               },
               'imageModulesData': [
@@ -401,8 +416,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
                   'mainImage': {
                     'kind': 'sdfd',
                     'sourceUri': {
-                      'uri':
-                          'https://res.cloudinary.com/parc-india/image/upload/f_auto,q_auto/x0ghmv4ym4ucg3lklsya',
+                      'uri': dustbin.cardImage,
                     },
                     'contentDescription': {
                       'kind': 'dwqeqw',
@@ -1152,6 +1166,8 @@ class Dustbin {
     required this.maxLength,
     required this.mistakes,
     required this.collectibleType,
+    required this.heroImage,
+    required this.cardImage,
     List<Item>? items,
   }) : items = items ?? [];
 
@@ -1163,6 +1179,8 @@ class Dustbin {
   final CollectibleReward collectibleReward;
   final int maxLength;
   final String collectibleType;
+  final String heroImage;
+  final String cardImage;
   int mistakes;
   String get formattedTotalItemPrice {
     final totalPriceCents =
