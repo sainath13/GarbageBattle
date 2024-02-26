@@ -2,12 +2,14 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:chatview/chatview.dart';
 import 'package:flutter/material.dart';
 import 'package:garbage_sorting/app_barcode_scanner_widget.dart';
+import 'package:garbage_sorting/data.dart';
+import 'package:garbage_sorting/model/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:widget_circular_animator/widget_circular_animator.dart';
-import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:confetti/confetti.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 
@@ -62,7 +64,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     super.initState();
 
     // initialize confettiController
-    _topController = ConfettiController(duration: const Duration(seconds: 10));
+    _topController = ConfettiController(duration: const Duration(seconds: 2));
   }
 
   @override
@@ -72,6 +74,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     super.dispose();
   }
 
+  bool isCongratsShowing = false;
   final List<Dustbin> _dustbins = [
     Dustbin(
       name: '    Wet waste    ',
@@ -223,31 +226,28 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
         Row(
           children: [
             Expanded(
-              flex: 8,
+              flex: 18,
               child: _buildGarbageList(),
             ),
-            Expanded(
-              flex: 2,
-              child: _buildDustbinRow(),
-            ),
+            _buildDustbinRow(),
           ],
         ),
-        Align(
-          alignment: Alignment.topCenter,
-          child: ConfettiWidget(
-            confettiController: _topController,
-            blastDirection: pi / 2,
-            maxBlastForce: 5,
-            minBlastForce: 1,
-            emissionFrequency: 0.03,
+        // Align(
+        //   alignment: Alignment.topCenter,
+        //   child: ConfettiWidget(
+        //     confettiController: _topController,
+        //     blastDirection: pi / 2,
+        //     maxBlastForce: 5,
+        //     minBlastForce: 1,
+        //     emissionFrequency: 0.03,
 
-            // 10 paticles will pop-up at a time
-            numberOfParticles: 10,
+        //     // 10 paticles will pop-up at a time
+        //     numberOfParticles: 10,
 
-            // particles will pop-up
-            gravity: 0,
-          ),
-        ),
+        //     // particles will pop-up
+        //     gravity: 0,
+        //   ),
+        // ),
       ],
     );
   }
@@ -265,6 +265,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     if (_items.isEmpty) {
       return const Text("helo");
     } else {
+      isCongratsShowing = false;
       return AnimationLimiter(
         child: GridView.count(
           crossAxisCount: 5,
@@ -295,6 +296,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
 
   Widget _buildCongratulationsScreen(Dustbin dustbin) {
     _topController.play();
+    isCongratsShowing = true;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -310,7 +312,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
                 // const SizedBox(width: 200),
                 CollectibleCardWidget(
                     collectibleReward: dustbin.collectibleReward),
-                ChatWidget(),
+                ChatScreen(),
                 const SizedBox(height: 20),
               ],
             ),
@@ -522,19 +524,26 @@ EZW1R276C15ZWzTgdiIgd+4YRlAWJbhp7dROf8hlFkUN+R0JDQFL7fk+lGLn2ZoL
   }
 
   Widget _buildDustbinRow() {
-    return Stack(
-      children: <Widget>[
-        Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 2.5,
-            vertical: 5,
-          ),
-          child: Column(
-            children: _dustbins.map(_buildDustbinWithDropZone).toList(),
-          ),
+    if (!isCongratsShowing) {
+      return Expanded(
+        flex: 3,
+        child: Stack(
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 1,
+                vertical: 2,
+              ),
+              child: Column(
+                children: _dustbins.map(_buildDustbinWithDropZone).toList(),
+              ),
+            ),
+          ],
         ),
-      ],
-    );
+      );
+    } else {
+      return Stack();
+    }
   }
 
   Widget _buildDustbinWithDropZone(Dustbin dustbin) {
@@ -599,6 +608,281 @@ EZW1R276C15ZWzTgdiIgd+4YRlAWJbhp7dROf8hlFkUN+R0JDQFL7fk+lGLn2ZoL
   }
 }
 
+class ChatScreen extends StatefulWidget {
+  const ChatScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  AppTheme theme = LightTheme();
+  bool isDarkTheme = false;
+  final currentUser = ChatUser(
+    id: '1',
+    name: 'Emi',
+    profilePhoto: Data.profileImage,
+  );
+  final _chatController = ChatController(
+    initialMessageList: Data.messageList,
+    scrollController: ScrollController(),
+    chatUsers: [
+      ChatUser(
+        id: '2',
+        name: 'Simform',
+        profilePhoto: Data.profileImage,
+      ),
+      ChatUser(
+        id: '3',
+        name: 'Jhon',
+        profilePhoto: Data.profileImage,
+      ),
+      ChatUser(
+        id: '4',
+        name: 'Mike',
+        profilePhoto: Data.profileImage,
+      ),
+      ChatUser(
+        id: '5',
+        name: 'Rich',
+        profilePhoto: Data.profileImage,
+      ),
+    ],
+  );
+
+  void _showHideTypingIndicator() {
+    _chatController.setTypingIndicator = !_chatController.showTypingIndicator;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 400,
+      height: 700,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: ChatView(
+          currentUser: currentUser,
+          chatController: _chatController,
+          onSendTap: _onSendTap,
+          featureActiveConfig: const FeatureActiveConfig(
+            lastSeenAgoBuilderVisibility: true,
+            receiptsBuilderVisibility: true,
+          ),
+          chatViewState: ChatViewState.hasMessages,
+          chatViewStateConfig: ChatViewStateConfiguration(
+            loadingWidgetConfig: ChatViewStateWidgetConfiguration(
+              loadingIndicatorColor: theme.outgoingChatBubbleColor,
+            ),
+            onReloadButtonTap: () {},
+          ),
+          typeIndicatorConfig: TypeIndicatorConfiguration(
+            flashingCircleBrightColor: theme.flashingCircleBrightColor,
+            flashingCircleDarkColor: theme.flashingCircleDarkColor,
+          ),
+          appBar: ChatViewAppBar(
+            elevation: theme.elevation,
+            backGroundColor: theme.appBarColor,
+            profilePicture: Data.profileImage,
+            backArrowColor: theme.backArrowColor,
+            chatTitle: "Mom",
+            chatTitleTextStyle: TextStyle(
+              color: theme.appBarTitleTextStyle,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              letterSpacing: 0.25,
+            ),
+            userStatus: "online",
+            userStatusTextStyle: const TextStyle(color: Colors.grey),
+            actions: [
+              // IconButton(
+              //   onPressed: _onThemeIconTap,
+              //   icon: Icon(
+              //     isDarkTheme
+              //         ? Icons.brightness_4_outlined
+              //         : Icons.dark_mode_outlined,
+              //     color: theme.themeIconColor,
+              //   ),
+              // ),
+              // IconButton(
+              //   tooltip: 'Toggle TypingIndicator',
+              //   onPressed: _showHideTypingIndicator,
+              //   icon: Icon(
+              //     Icons.keyboard,
+              //     color: theme.themeIconColor,
+              //   ),
+              // ),
+            ],
+          ),
+          chatBackgroundConfig: ChatBackgroundConfiguration(
+            messageTimeIconColor: theme.messageTimeIconColor,
+            messageTimeTextStyle: TextStyle(color: theme.messageTimeTextColor),
+            defaultGroupSeparatorConfig: DefaultGroupSeparatorConfiguration(
+              textStyle: TextStyle(
+                color: theme.chatHeaderColor,
+                fontSize: 17,
+              ),
+            ),
+            backgroundColor: theme.backgroundColor,
+          ),
+          sendMessageConfig: SendMessageConfiguration(
+            replyMessageColor: theme.replyMessageColor,
+            defaultSendButtonColor: theme.sendButtonColor,
+            replyDialogColor: theme.replyDialogColor,
+            replyTitleColor: theme.replyTitleColor,
+            textFieldBackgroundColor: theme.textFieldBackgroundColor,
+            closeIconColor: theme.closeIconColor,
+            textFieldConfig: TextFieldConfiguration(
+              onMessageTyping: (status) {
+                /// Do with status
+                debugPrint(status.toString());
+              },
+              compositionThresholdTime: const Duration(seconds: 1),
+              textStyle: TextStyle(color: theme.textFieldTextColor),
+            ),
+          ),
+          chatBubbleConfig: ChatBubbleConfiguration(
+            outgoingChatBubbleConfig: ChatBubble(
+              linkPreviewConfig: LinkPreviewConfiguration(
+                backgroundColor: theme.linkPreviewOutgoingChatColor,
+                bodyStyle: theme.outgoingChatLinkBodyStyle,
+                titleStyle: theme.outgoingChatLinkTitleStyle,
+              ),
+              receiptsWidgetConfig: const ReceiptsWidgetConfig(
+                  showReceiptsIn: ShowReceiptsIn.all),
+              color: theme.outgoingChatBubbleColor,
+            ),
+            inComingChatBubbleConfig: ChatBubble(
+              linkPreviewConfig: LinkPreviewConfiguration(
+                linkStyle: TextStyle(
+                  color: theme.inComingChatBubbleTextColor,
+                  decoration: TextDecoration.underline,
+                ),
+                backgroundColor: theme.linkPreviewIncomingChatColor,
+                bodyStyle: theme.incomingChatLinkBodyStyle,
+                titleStyle: theme.incomingChatLinkTitleStyle,
+              ),
+              textStyle: TextStyle(color: theme.inComingChatBubbleTextColor),
+              onMessageRead: (message) {
+                /// send your message reciepts to the other client
+                debugPrint('Message Read');
+              },
+              senderNameTextStyle:
+                  TextStyle(color: theme.inComingChatBubbleTextColor),
+              color: theme.inComingChatBubbleColor,
+            ),
+          ),
+          replyPopupConfig: ReplyPopupConfiguration(
+            backgroundColor: theme.replyPopupColor,
+            buttonTextStyle: TextStyle(color: theme.replyPopupButtonColor),
+            topBorderColor: theme.replyPopupTopBorderColor,
+          ),
+          reactionPopupConfig: ReactionPopupConfiguration(
+            shadow: BoxShadow(
+              color: isDarkTheme ? Colors.black54 : Colors.grey.shade400,
+              blurRadius: 20,
+            ),
+            backgroundColor: theme.reactionPopupColor,
+          ),
+          messageConfig: MessageConfiguration(
+            messageReactionConfig: MessageReactionConfiguration(
+              backgroundColor: theme.messageReactionBackGroundColor,
+              borderColor: theme.messageReactionBackGroundColor,
+              reactedUserCountTextStyle:
+                  TextStyle(color: theme.inComingChatBubbleTextColor),
+              reactionCountTextStyle:
+                  TextStyle(color: theme.inComingChatBubbleTextColor),
+              reactionsBottomSheetConfig: ReactionsBottomSheetConfiguration(
+                backgroundColor: theme.backgroundColor,
+                reactedUserTextStyle: TextStyle(
+                  color: theme.inComingChatBubbleTextColor,
+                ),
+                reactionWidgetDecoration: BoxDecoration(
+                  color: theme.inComingChatBubbleColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color:
+                          isDarkTheme ? Colors.black12 : Colors.grey.shade200,
+                      offset: const Offset(0, 20),
+                      blurRadius: 40,
+                    )
+                  ],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+            imageMessageConfig: ImageMessageConfiguration(
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+              shareIconConfig: ShareIconConfiguration(
+                defaultIconBackgroundColor: theme.shareIconBackgroundColor,
+                defaultIconColor: theme.shareIconColor,
+              ),
+            ),
+          ),
+          profileCircleConfig: const ProfileCircleConfiguration(
+            profileImageUrl: Data.profileImage,
+          ),
+          repliedMessageConfig: RepliedMessageConfiguration(
+            backgroundColor: theme.repliedMessageColor,
+            verticalBarColor: theme.verticalBarColor,
+            repliedMsgAutoScrollConfig: RepliedMsgAutoScrollConfig(
+              enableHighlightRepliedMsg: true,
+              highlightColor: Colors.pinkAccent.shade100,
+              highlightScale: 1.1,
+            ),
+            textStyle: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.25,
+            ),
+            replyTitleTextStyle: TextStyle(color: theme.repliedTitleTextColor),
+          ),
+          swipeToReplyConfig: SwipeToReplyConfiguration(
+            replyIconColor: theme.swipeToReplyIconColor,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _onSendTap(
+    String message,
+    ReplyMessage replyMessage,
+    MessageType messageType,
+  ) {
+    final id = int.parse(Data.messageList.last.id) + 1;
+    _chatController.addMessage(
+      Message(
+        id: id.toString(),
+        createdAt: DateTime.now(),
+        message: message,
+        sendBy: currentUser.id,
+        replyMessage: replyMessage,
+        messageType: messageType,
+      ),
+    );
+    Future.delayed(const Duration(milliseconds: 300), () {
+      _chatController.initialMessageList.last.setStatus =
+          MessageStatus.undelivered;
+    });
+    Future.delayed(const Duration(seconds: 1), () {
+      _chatController.initialMessageList.last.setStatus = MessageStatus.read;
+    });
+  }
+
+  void _onThemeIconTap() {
+    setState(() {
+      if (isDarkTheme) {
+        theme = LightTheme();
+        isDarkTheme = false;
+      } else {
+        theme = DarkTheme();
+        isDarkTheme = true;
+      }
+    });
+  }
+}
+
 class AnimatedMomSayingCongratsWidget extends StatelessWidget {
   const AnimatedMomSayingCongratsWidget({
     super.key,
@@ -627,66 +911,27 @@ class AnimatedMomSayingCongratsWidget extends StatelessWidget {
   }
 }
 
-class ChatWidget extends StatelessWidget {
-  const ChatWidget({
-    super.key,
-  });
+// class ChatWidget extends StatelessWidget {
+//   const ChatWidget({
+//     super.key,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 50,
-      shadowColor: Colors.black,
-      child: SizedBox(
-        width: 300,
-        height: 500,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                BubbleSpecialTwo(
-                  text: 'Mom, who is this stunning cheetah',
-                  isSender: true,
-                  color: Color.fromARGB(255, 110, 110, 198),
-                  tail: true,
-                  sent: true,
-                ),
-                BubbleSpecialOne(
-                  text:
-                      'Honey he is Zephyr. He roams around planets and eats rabbits. You have got it as a card reward for collecting all sanitary garbage correctly.',
-                  isSender: false,
-                  color: Color(0xFF1B97F3),
-                  textStyle: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
-                ),
-                BubbleSpecialTwo(
-                  text:
-                      'WOw mom thats awesome, I dont want to loose him, how do I save him',
-                  isSender: true,
-                  color: Color.fromARGB(255, 110, 110, 198),
-                  tail: true,
-                  sent: true,
-                ),
-                BubbleSpecialOne(
-                  text: 'Add it to your google wallet using the button below',
-                  isSender: false,
-                  color: Color(0xFF1B97F3),
-                  textStyle: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Card(
+//       elevation: 50,
+//       shadowColor: Colors.black,
+// child: SizedBox(
+//   width: 300,
+//   height: 500,
+//   child: Padding(
+//     padding: const EdgeInsets.all(20.0),
+//     child: ///code here
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class AnimatedBorderPainter extends CustomPainter {
   final Animation<double> _animation;
