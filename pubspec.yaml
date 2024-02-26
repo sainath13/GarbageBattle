@@ -44,6 +44,7 @@ dependencies:
   # ai_barcode_scanner: ^3.4.3
   permission_handler: ^8.0.0+2
   ai_barcode: ^3.2.7
+  dart_jsonwebtoken: ^2.13.0
   
 
 

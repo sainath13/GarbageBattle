@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
@@ -8,6 +9,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:widget_circular_animator/widget_circular_animator.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:confetti/confetti.dart';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 
 void main() {
   runApp(
@@ -78,6 +80,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       collectibleReward: CollectibleReward.kumo,
       maxLength: 1, //TODO SAI change this lengths to actual counts
       mistakes: 0,
+      collectibleType: 'Dog',
       icon: const Icon(
         Icons.recycling_rounded,
         color: Colors.white,
@@ -91,6 +94,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       maxLength: 1,
       mistakes: 0,
       collectibleReward: CollectibleReward.zephyr,
+      collectibleType: 'Cheetah',
       icon: const Icon(
         Icons.recycling_sharp,
         color: Colors.white,
@@ -104,6 +108,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       maxLength: 1,
       mistakes: 0,
       collectibleReward: CollectibleReward.fenrir,
+      collectibleType: 'Wolf',
       icon: const Icon(
         Icons.recycling,
         color: Colors.white,
@@ -117,6 +122,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       maxLength: 1,
       mistakes: 0,
       collectibleReward: CollectibleReward.ursula,
+      collectibleType: 'Bear',
       icon: const Icon(
         Icons.recycling_outlined,
         color: Colors.white,
@@ -293,7 +299,8 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
                 setState(() {
                   dustbin.items = [];
                 });
-                Navigator.of(context).restorablePush(_dialogBuilder);
+                //Navigator.of(context).restorablePush(_dialogBuilder);
+                _launchURL(dustbin);
               },
               child: const Text('Add to Google Wallet'),
             ),
@@ -335,12 +342,133 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     );
   }
 
-  _launchURL() async {
-    final Uri _url = Uri.parse(
-        'https://pay.google.com/gp/v/save/eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdHJhdy1oYXRAZGV2cG9zdGhhY2thdGhvbi5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsImF1ZCI6Imdvb2dsZSIsIm9yaWdpbnMiOltdLCJ0eXAiOiJzYXZldG93YWxsZXQiLCJwYXlsb2FkIjp7ImdlbmVyaWNPYmplY3RzIjpbeyJpZCI6IjMzODgwMDAwMDAwMjIzMjE0MjEubGF0a2Fyc2FpbmF0aF9nbWFpbC5jb20iLCJjbGFzc0lkIjoiMzM4ODAwMDAwMDAyMjMyMTQyMS5jb2RlbGFiX2NsYXNzIiwiZ2VuZXJpY1R5cGUiOiJHRU5FUklDX1RZUEVfVU5TUEVDSUZJRUQiLCJoZXhCYWNrZ3JvdW5kQ29sb3IiOiIjNDI4NWY0IiwibG9nbyI6eyJzb3VyY2VVcmkiOnsidXJpIjoiaHR0cHM6Ly9zdG9yYWdlLmdvb2dsZWFwaXMuY29tL3dhbGxldC1sYWItdG9vbHMtY29kZWxhYi1hcnRpZmFjdHMtcHVibGljL3Bhc3NfZ29vZ2xlX2xvZ28uanBnIn19LCJjYXJkVGl0bGUiOnsiZGVmYXVsdFZhbHVlIjp7Imxhbmd1YWdlIjoiZW4iLCJ2YWx1ZSI6Ikdvb2dsZSBJL08gJzIyIn19LCJzdWJoZWFkZXIiOnsiZGVmYXVsdFZhbHVlIjp7Imxhbmd1YWdlIjoiZW4iLCJ2YWx1ZSI6IkF0dGVuZGVlIn19LCJoZWFkZXIiOnsiZGVmYXVsdFZhbHVlIjp7Imxhbmd1YWdlIjoiZW4iLCJ2YWx1ZSI6IkFsZXggTWNKYWNvYnMifX0sImJhcmNvZGUiOnsidHlwZSI6IlFSX0NPREUiLCJ2YWx1ZSI6IjMzODgwMDAwMDAwMjIzMjE0MjEubGF0a2Fyc2FpbmF0aF9nbWFpbC5jb20ifSwiaGVyb0ltYWdlIjp7InNvdXJjZVVyaSI6eyJ1cmkiOiJodHRwczovL3N0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vd2FsbGV0LWxhYi10b29scy1jb2RlbGFiLWFydGlmYWN0cy1wdWJsaWMvZ29vZ2xlLWlvLWhlcm8tZGVtby1vbmx5LmpwZyJ9fSwidGV4dE1vZHVsZXNEYXRhIjpbeyJoZWFkZXIiOiJQT0lOVFMiLCJib2R5IjoiMTIzNCIsImlkIjoicG9pbnRzIn0seyJoZWFkZXIiOiJDT05UQUNUUyIsImJvZHkiOiIyMCIsImlkIjoiY29udGFjdHMifV19XX0sImlhdCI6MTcwODE4MDA3Nn0.dpGtIcYN3k4o4nnQjakFADw0zWKK6i_sUgLZ-wWwgfwrc9eNTLtklIq9oqtriRViqXBiXeadXtYoNznECFbev_bi8jfKnc918jH9qH_j3y3uNm3kXZtfjYDGe1ApvSu73HZWpWxTVybTaoVbPzzl3wMSeinOfSU5b2VDLkE49-tpj3ZEeKNPhAhIQHIjiIW2vAFcsr9XlTGNH6A6ZIeQIJrx5X4fSnOXUlKDJC-_qAIbmwoINXEOnY_5LcwEimCjafkJTaXBqqAiv3FnhZ94z5nTbfo9WDZJrQX9pvekTZ73sIvAhFH8FUat029Vc2aZC3oaxwoVMqW6Bd3-NuXNSA');
+  _launchURL(Dustbin dustbin) async {
+    final jwt = JWT(
+      {
+        'iss': 'straw-hat@devposthackathon.iam.gserviceaccount.com',
+        'aud': 'google',
+        'origins': [],
+        'typ': 'savetowallet',
+        'payload': {
+          'genericObjects': [
+            {
+              'id': '3388000000022321421.123123123123123229',
+              'classId': '3388000000022321421.Starsefdsfs75',
+              'genericType': 'GENERIC_TYPE_UNSPECIFIED',
+              'hexBackgroundColor': '#4285f4',
+              'logo': {
+                'sourceUri': {
+                  'uri':
+                      'https://res.cloudinary.com/parc-india/image/upload/v1642349740/Screen_Shot_2022-01-16_at_9.44.45_PM_hgazpj.png'
+                }
+              },
+              'cardTitle': {
+                'defaultValue': {'language': 'en', 'value': 'Strawhat labs'}
+              },
+              'subheader': {
+                'defaultValue': {'language': 'en', 'value': 'The wanderer'}
+              },
+              'header': {
+                'defaultValue': {'language': 'en', 'value': 'FERNINR'}
+              },
+              "textModulesData": [
+                {
+                  "id": "points",
+                  "header": "POINTS",
+                  "body":
+                      "${(100 - dustbin.mistakes * 10) > 10 ? 100 - dustbin.mistakes * 10 : 10}",
+                },
+                {
+                  "id": "type",
+                  "header": "type",
+                  "body": "${dustbin.collectibleType}",
+                },
+                {
+                  "id": "cardinfo",
+                  "header": "Name of the card",
+                  "body":
+                      "Total description and story of the card, this is really good and should be printed on multiple lines my friend. heelo good morning",
+                }
+              ],
+              'heroImage': {
+                'sourceUri': {
+                  'uri':
+                      'https://res.cloudinary.com/parc-india/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1708706668/84823BA6-0E4A-4BFC-B591-2281FB6AF9FA_hb33up.jpg'
+                }
+              },
+              'imageModulesData': [
+                {
+                  'mainImage': {
+                    'kind': 'sdfd',
+                    'sourceUri': {
+                      'uri':
+                          'https://res.cloudinary.com/parc-india/image/upload/f_auto,q_auto/x0ghmv4ym4ucg3lklsya',
+                    },
+                    'contentDescription': {
+                      'kind': 'dwqeqw',
+                      'defaultValue': {
+                        'kind': 'dwqeqw1',
+                        'language': 'en-US',
+                        'value': 'COngasegfsgds'
+                      }
+                    }
+                  },
+                  'id': '123123'
+                }
+              ]
+            }
+          ]
+        }
+      },
+      issuer: getIssuerForPass,
+    );
+
+    String pem = getPrivateKey();
+
+    final pkey = RSAPrivateKey(pem);
+
+    String token = jwt.sign(pkey, algorithm: JWTAlgorithm.RS256);
+
+    final Uri _url = Uri.parse('https://pay.google.com/gp/v/save/$token');
+    // print(uri)
     if (!await launchUrl(_url)) {
       throw Exception('Could not launch $_url');
     }
+  }
+
+  String get getIssuerForPass =>
+      'straw-hat@devposthackathon.iam.gserviceaccount.com';
+
+  String getPrivateKey() {
+    const pem = '''-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC5PHHiqp78VQEt
+FUrs7WUT8NQmNwGWgot5+cHFmd9zQFP9qxtnFbKJL7ZmybiKbeH+vIGsa+sFpOwB
+S3nfvnkyurJfzIoPujY348FmqtCBkUIN+HhW39NIe2hhwN9U6wtWtbRxDaPDXAia
+h64j9yWwlO/BAJmMXHtcrKsxPUMWaLtKqqCJpck0t956Nb7SngMoq3Fvwvgc6LMk
+iA3Nn5x/CbbrkRxsiDEJMbFTNLAGIhYhugM/Unjv9vMKnrvF2fEgYuBp26i9hSbH
+V1xBbcdUuEumL0MZqiWs0KKeezDeJg1oUDXf0T85RzuhA3/CZw/eQCCG+mKNg9F2
+37Vfop9JAgMBAAECggEAJ10f+oI1rPvHdzQqKvU74KPyAXj4/moZh786nWpYoN5P
+uv1solhrC1o3UdqWO9ykBQU8LU71r8pfWNsYOCL7EHu6Qj9uK29v7CqbQ90S2CXt
+OpjNwfBoruOCyBs7mokkbLXKdafnYDGjpmsk54Gy4baUyJf/CWPx1zzeWGVjZ1RX
+ix+qv1tuznBUQyt3VkUHMAzEi5j1qe5MwYUK9Wfj+k0tA4/Dxi70Vqr0CEhcXmAY
+8h3Vat8XIovLwGeiKQhqyI22wU+okg8fHwtmPTKtVNmFGBUzVpfLQog62XGOmwxm
+ROwfIA4P0K3MX4dCp5AUE0gVnADrBm/+QWnVtOBAcQKBgQDpRLiDlplcnjZcOa0O
+lzFMC9cqvSOZtCXd6ynFARM0xkFWib2h7E2x04cEkn2AJ8o7WvsubxMhgaNul7N/
+iT3VSDGOHv6IGHfizIeQRNAO/OQbH1jaQICWmejBWkLE+rD9Ua0tASY4eRcsgh62
+sKbK9AjBSCANS0d94/K5lMRXzQKBgQDLSXnKLUJ2hC1O8KJgYzIWjFnYEh+0PBgz
+38MLFXiLyGwv6i9AYR0O9dvjRKa0g8THH13zXnmAK9KxpT2TBbGG02LMh4Psicd8
+Xw4fnKXC8Ib4OzXbdgvpgVCXulU0wEZeKtlxdSeLosQVtrIDHx6ODGvj4p901OuQ
+QyqdXycxbQKBgCLf2U4jB86nAK2NGehihkY+Ru7m1Bm4qyigbeA8Juju8vnDIgzB
+TWRWoYr3c7fjOwLguUjZ5lxOC2cPWxCoLgxi/LWowJkMP3Ay79mL0CdNe7TqXNhU
+aGUboYa2veDBMhDNUzy1PUeYIvTOh1T82BLjpSNwawpRxOB3YeSI70nJAoGBAL8v
+xz8B+fQEs6f+YHhOUpkqPoUb5n1X11tSItmVw92TDUyy7uWZb/7V84t20WIMW1D6
+ix2LyLFmha1VPue6/w9SVyUMfmJD4j1yGJJafPstw4JKDYjtKJ7fY7CPKfuGqad+
+nSo7iImm9suFGz4cUlw+Cmo0hMsYRMNUqAuBphaxAoGAOq6IpyYQI0ivSluXwpFV
+F8aiZsH6AVadAEMqPl3ue2khYFJHHFFnZb6lm2N3rCwlLct2sJSBu5vYRbhld7qy
+EZW1R276C15ZWzTgdiIgd+4YRlAWJbhp7dROf8hlFkUN+R0JDQFL7fk+lGLn2ZoL
+9U+gS/j67Cz3C3R1aXe/yss=
+-----END PRIVATE KEY-----''';
+    return pem;
   }
 
   Widget _buildMenuItem({
@@ -1023,6 +1151,7 @@ class Dustbin {
     required this.collectibleReward,
     required this.maxLength,
     required this.mistakes,
+    required this.collectibleType,
     List<Item>? items,
   }) : items = items ?? [];
 
@@ -1033,6 +1162,7 @@ class Dustbin {
   final Icon icon;
   final CollectibleReward collectibleReward;
   final int maxLength;
+  final String collectibleType;
   int mistakes;
   String get formattedTotalItemPrice {
     final totalPriceCents =
