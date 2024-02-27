@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
+import 'dart:async';
 
 import 'package:chatview/chatview.dart';
 import 'package:flutter/material.dart';
@@ -624,7 +625,7 @@ class _ChatScreenState extends State<ChatScreen> {
     profilePhoto: Data.profileImage,
   );
   final _chatController = ChatController(
-    initialMessageList: Data.messageList,
+    initialMessageList: Data.messageListOriginal,
     scrollController: ScrollController(),
     chatUsers: [
       ChatUser(
@@ -650,6 +651,23 @@ class _ChatScreenState extends State<ChatScreen> {
     ],
   );
 
+  @override
+  void initState() {
+    super.initState();
+    var index = 0;
+    Timer.periodic(Duration(seconds: 2), (timer) {
+      // Check if there are still messages to send
+      if (Data.messageList.length != index) {
+        // Call _onSendTap with the first message in the list
+        _onSendTap(Data.messageList[index++]);
+      } else {
+        // If there are no more messages, cancel the timer
+        timer.cancel();
+      }
+    });
+    // Call your function here when the widget is loaded
+  }
+
   void _showHideTypingIndicator() {
     _chatController.setTypingIndicator = !_chatController.showTypingIndicator;
   }
@@ -664,7 +682,7 @@ class _ChatScreenState extends State<ChatScreen> {
         child: ChatView(
           currentUser: currentUser,
           chatController: _chatController,
-          onSendTap: _onSendTap,
+          onSendTap: null,
           featureActiveConfig: const FeatureActiveConfig(
             lastSeenAgoBuilderVisibility: true,
             receiptsBuilderVisibility: true,
@@ -846,21 +864,12 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _onSendTap(
-    String message,
-    ReplyMessage replyMessage,
-    MessageType messageType,
+    Message message,
+    // ReplyMessage replyMessage,
+    // MessageType messageType,
   ) {
-    final id = int.parse(Data.messageList.last.id) + 1;
-    _chatController.addMessage(
-      Message(
-        id: id.toString(),
-        createdAt: DateTime.now(),
-        message: message,
-        sendBy: currentUser.id,
-        replyMessage: replyMessage,
-        messageType: messageType,
-      ),
-    );
+    final id = int.parse(Data.messageListOriginal.last.id) + 1;
+    _chatController.addMessage(message);
     Future.delayed(const Duration(milliseconds: 300), () {
       _chatController.initialMessageList.last.setStatus =
           MessageStatus.undelivered;
