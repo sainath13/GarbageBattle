@@ -45,6 +45,7 @@ dependencies:
   ai_barcode: ^3.2.7
   dart_jsonwebtoken: ^2.13.0
   chatview: ^1.3.1
+  lottie: ^2.7.0
   
 
 
@@ -71,6 +72,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - assets/green_waste.json
+    - assets/blue_waste.json
+    - assets/red_waste.json
+    - assets/gray_waste.json
     - assets/alum_can.png
     - assets/band_aids.png
     - assets/burger.png

@@ -13,6 +13,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:widget_circular_animator/widget_circular_animator.dart';
 import 'package:confetti/confetti.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:lottie/lottie.dart';
 
 void main() {
   runApp(
@@ -33,7 +34,7 @@ List<Item> _items = [
     totalPriceCents: 1299,
     uid: '1',
     imageProvider: AssetImage('assets/alum_can.png'),
-    garbageType: GarbageType.dry,
+    garbageType: GarbageType.wet,
     incorrectMessageDescription:
         "Oops! Looks like this can needs a different destination. Think about where you'd recycle it.",
   ),
@@ -59,6 +60,10 @@ class ExampleDragAndDrop extends StatefulWidget {
 class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     with TickerProviderStateMixin {
   late ConfettiController _topController;
+  late final AnimationController _greenController;
+  late final AnimationController _blueController;
+  late final AnimationController _redController;
+  late final AnimationController _grayController;
 
   @override
   void initState() {
@@ -66,12 +71,20 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
 
     // initialize confettiController
     _topController = ConfettiController(duration: const Duration(seconds: 2));
+    _greenController = AnimationController(vsync: this);
+    _blueController = AnimationController(vsync: this);
+    _redController = AnimationController(vsync: this);
+    _grayController = AnimationController(vsync: this);
   }
 
   @override
   void dispose() {
     // dispose the controller
     _topController.dispose();
+    _greenController.dispose();
+    _blueController.dispose();
+    _redController.dispose();
+    _grayController.dispose();
     super.dispose();
   }
 
@@ -169,10 +182,34 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
 
   final GlobalKey _draggableKey = GlobalKey();
 
-  void _itemDroppedOnDustbin({
+  Future<void> _itemDroppedOnDustbin({
     required Item item,
     required Dustbin dustbin,
-  }) {
+  }) async {
+    if (dustbin.garbageType == GarbageType.wet) {
+      _greenController.reset();
+      _greenController.forward();
+      await Future.delayed(Duration(milliseconds: 2500));
+    }
+
+    if (dustbin.garbageType == GarbageType.dry) {
+      _blueController.reset();
+      _blueController.forward();
+      await Future.delayed(Duration(milliseconds: 2500));
+    }
+
+    if (dustbin.garbageType == GarbageType.sanitary) {
+      _redController.reset();
+      _redController.forward();
+      await Future.delayed(Duration(milliseconds: 2500));
+    }
+
+    if (dustbin.garbageType == GarbageType.ewaste) {
+      _grayController.reset();
+      _grayController.forward();
+      await Future.delayed(Duration(milliseconds: 2500));
+    }
+
     setState(() {
       dustbin.items.add(item);
       _items.removeWhere((element) => element.uid == item.uid);
@@ -552,13 +589,76 @@ EZW1R276C15ZWzTgdiIgd+4YRlAWJbhp7dROf8hlFkUN+R0JDQFL7fk+lGLn2ZoL
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 4,
+          vertical: 4,
         ),
         child: DragTarget<Item>(
           builder: (context, candidateItems, rejectedItems) {
-            return DustbinCart(
-              hasItems: dustbin.items.isNotEmpty,
-              highlighted: candidateItems.isNotEmpty,
-              dustbin: dustbin,
+            var hasItems = dustbin.items.isNotEmpty;
+            var highlighted = candidateItems.isNotEmpty;
+            final textColor = highlighted ? Colors.black : Colors.white;
+            return Transform.scale(
+              scale: highlighted ? 1.075 : 1.0,
+              child: Material(
+                elevation: highlighted ? 8 : 4,
+                borderRadius: BorderRadius.circular(22),
+                color: highlighted
+                    ? const Color.fromARGB(184, 223, 133, 233)
+                    : dustbin.color,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // ClipOval(
+                      CircleAvatar(
+                        // width: 150,
+                        // height: 150,
+                        // child: dustbin.icon,
+                        radius: 60.0,
+                        backgroundColor: Colors.white12,
+                        child: buildRecycleDustbinIcon(dustbin),
+                        // ),
+                      ),
+                      const SizedBox(height: 15),
+                      Text(
+                        dustbin.name,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(
+                              color: textColor,
+                              fontWeight:
+                                  hasItems ? FontWeight.bold : FontWeight.bold,
+                            ),
+                      ),
+                      // Visibility(
+                      //   visible: hasItems,
+                      //   maintainState: true,
+                      //   maintainAnimation: true,
+                      //   maintainSize: true,
+                      //   child: Column(
+                      //     children: [
+                      //       const SizedBox(height: 4),
+                      //       Text(
+                      //         '${dustbin.items.length} item${dustbin.items.length != 1 ? 's' : ''}',
+                      //         style: Theme.of(context)
+                      //             .textTheme
+                      //             .titleMedium!
+                      //             .copyWith(
+                      //               color: textColor,
+                      //               fontSize: 12,
+                      //             ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // )
+                    ],
+                  ),
+                ),
+              ),
             );
           },
           onAccept: (item) {
@@ -606,6 +706,62 @@ EZW1R276C15ZWzTgdiIgd+4YRlAWJbhp7dROf8hlFkUN+R0JDQFL7fk+lGLn2ZoL
         ),
       ),
     );
+  }
+
+  LottieBuilder buildRecycleDustbinIcon(Dustbin dustbin) {
+    return Lottie.asset(
+      getLottieAssetFromDustbin(dustbin),
+      controller: getAnimationController(dustbin),
+      animate: false,
+      onLoaded: (composition) {
+        // Configure the AnimationController with the duration of the
+        // Lottie file and start the animation.
+        _greenController
+          ..duration = composition.duration
+          ..forward();
+        _redController
+          ..duration = composition.duration
+          ..forward();
+
+        _blueController
+          ..duration = composition.duration
+          ..forward();
+
+        _grayController
+          ..duration = composition.duration
+          ..forward();
+      },
+    );
+  }
+
+  AnimationController getAnimationController(Dustbin dustbin) {
+    switch (dustbin.garbageType) {
+      case GarbageType.dry:
+        return _blueController;
+      case GarbageType.wet:
+        return _greenController;
+      case GarbageType.sanitary:
+        return _redController;
+      case GarbageType.ewaste:
+        return _grayController;
+      default:
+        return _greenController;
+    }
+  }
+
+  String getLottieAssetFromDustbin(Dustbin dustbin) {
+    switch (dustbin.garbageType) {
+      case GarbageType.dry:
+        return 'assets/blue_waste.json';
+      case GarbageType.wet:
+        return 'assets/green_waste.json';
+      case GarbageType.sanitary:
+        return 'assets/red_waste.json';
+      case GarbageType.ewaste:
+        return 'assets/gray_waste.json';
+      default:
+        return 'assets/green_waste.json';
+    }
   }
 }
 
@@ -1225,79 +1381,79 @@ class _CollectibleCardWidgetState extends State<CollectibleCardWidget>
       AssetImage('assets/$collectibleReward.png');
 }
 
-class DustbinCart extends StatelessWidget {
-  const DustbinCart({
-    super.key,
-    required this.dustbin,
-    this.highlighted = false,
-    this.hasItems = false,
-  });
+// class DustbinCart extends StatelessWidget {
+//   const DustbinCart({
+//     super.key,
+//     required this.dustbin,
+//     this.highlighted = false,
+//     this.hasItems = false,
+//   });
 
-  final Dustbin dustbin;
-  final bool highlighted;
-  final bool hasItems;
+//   final Dustbin dustbin;
+//   final bool highlighted;
+//   final bool hasItems;
 
-  @override
-  Widget build(BuildContext context) {
-    final textColor = highlighted ? Colors.black : Colors.white;
+//   @override
+//   Widget build(BuildContext context) {
+//     final textColor = highlighted ? Colors.black : Colors.white;
 
-    return Transform.scale(
-      scale: highlighted ? 1.075 : 1.0,
-      child: Material(
-        elevation: highlighted ? 8 : 4,
-        borderRadius: BorderRadius.circular(22),
-        color: highlighted
-            ? const Color.fromARGB(184, 223, 133, 233)
-            : dustbin.color,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 24,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ClipOval(
-                child: SizedBox(
-                  width: 75,
-                  height: 75,
-                  child: dustbin.icon,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                dustbin.name,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: textColor,
-                      fontWeight:
-                          hasItems ? FontWeight.normal : FontWeight.bold,
-                    ),
-              ),
-              Visibility(
-                visible: hasItems,
-                maintainState: true,
-                maintainAnimation: true,
-                maintainSize: true,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 4),
-                    Text(
-                      '${dustbin.items.length} item${dustbin.items.length != 1 ? 's' : ''}',
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                            color: textColor,
-                            fontSize: 12,
-                          ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+//     return Transform.scale(
+//       scale: highlighted ? 1.075 : 1.0,
+//       child: Material(
+//         elevation: highlighted ? 8 : 4,
+//         borderRadius: BorderRadius.circular(22),
+//         color: highlighted
+//             ? const Color.fromARGB(184, 223, 133, 233)
+//             : dustbin.color,
+//         child: Padding(
+//           padding: const EdgeInsets.symmetric(
+//             horizontal: 12,
+//             vertical: 24,
+//           ),
+//           child: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               ClipOval(
+//                 child: SizedBox(
+//                     width: 75,
+//                     height: 75,
+//                     // child: dustbin.icon,
+//                     child: dustbin.lottieWidgetAnimation),
+//               ),
+//               const SizedBox(height: 8),
+//               Text(
+//                 dustbin.name,
+//                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
+//                       color: textColor,
+//                       fontWeight:
+//                           hasItems ? FontWeight.normal : FontWeight.bold,
+//                     ),
+//               ),
+//               Visibility(
+//                 visible: hasItems,
+//                 maintainState: true,
+//                 maintainAnimation: true,
+//                 maintainSize: true,
+//                 child: Column(
+//                   children: [
+//                     const SizedBox(height: 4),
+//                     Text(
+//                       '${dustbin.items.length} item${dustbin.items.length != 1 ? 's' : ''}',
+//                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
+//                             color: textColor,
+//                             fontSize: 12,
+//                           ),
+//                     ),
+//                   ],
+//                 ),
+//               )
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class MenuListItem extends StatelessWidget {
   const MenuListItem({
